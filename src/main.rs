@@ -1,3 +1,6 @@
+mod collision;
+mod primitive;
+mod ray;
 mod vect;
 
 fn main() {

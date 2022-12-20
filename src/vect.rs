@@ -2,7 +2,7 @@ use std::ops::Add;
 
 /// Vector in space
 #[derive(Copy, Clone)]
-struct Vect {
+pub struct Vect {
     x: f64,
     y: f64,
     z: f64,
@@ -17,6 +17,14 @@ impl Vect {
     /// Returns the norm of the vector
     pub fn norm(&self) -> f64 {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
+    }
+
+    /// Normalizes the vector
+    pub fn normalize(&mut self) {
+        let norm = self.norm();
+        self.x /= norm;
+        self.y /= norm;
+        self.z /= norm;
     }
 }
 
