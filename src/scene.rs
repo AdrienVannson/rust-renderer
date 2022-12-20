@@ -1,7 +1,7 @@
-use crate::primitive::Primitive;
+use crate::shape::Shape;
 
 pub struct Scene {
-    objects: Vec<Box<dyn Primitive>>,
+    objects: Vec<Box<dyn Shape>>,
 }
 
 impl Scene {
@@ -13,7 +13,7 @@ impl Scene {
     }
 
     /// Adds an object to the scene
-    pub fn add_object(&mut self, obj: Box<dyn Primitive>) {
+    pub fn add_object(&mut self, obj: Box<dyn Shape>) {
         self.objects.push(obj);
     }
 }

@@ -1,5 +1,5 @@
 mod collision;
-mod primitive;
+mod shape;
 mod ray;
 mod sphere;
 mod vect;

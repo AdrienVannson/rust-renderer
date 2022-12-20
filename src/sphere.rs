@@ -1,5 +1,5 @@
 use crate::collision::Collision;
-use crate::primitive::Primitive;
+use crate::shape::Shape;
 use crate::ray::Ray;
 use crate::vect::Vect;
 
@@ -16,7 +16,7 @@ impl Sphere {
     }
 }
 
-impl Primitive for Sphere {
+impl Shape for Sphere {
     fn collision_date(&self, ray: Ray) -> f64 {
         let u = self.center - ray.pos();
         let v = ray.dir();
