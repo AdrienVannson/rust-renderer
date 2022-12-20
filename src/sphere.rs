@@ -1,6 +1,6 @@
 use crate::collision::Collision;
-use crate::shape::Shape;
 use crate::ray::Ray;
+use crate::shape::Shape;
 use crate::vect::Vect;
 
 pub struct Sphere {
@@ -10,9 +10,7 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn new(center: Vect, radius: f64) -> Self {
-        Self {
-            center, radius
-        }
+        Self { center, radius }
     }
 }
 
