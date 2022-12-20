@@ -1,6 +1,7 @@
 mod collision;
 mod primitive;
 mod ray;
+mod sphere;
 mod vect;
 
 fn main() {

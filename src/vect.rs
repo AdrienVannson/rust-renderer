@@ -1,11 +1,11 @@
-use std::ops::Add;
+use std::ops::{Add, Mul, Sub};
 
 /// Vector in space
 #[derive(Copy, Clone)]
 pub struct Vect {
-    x: f64,
-    y: f64,
-    z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 impl Vect {
@@ -26,6 +26,16 @@ impl Vect {
         self.y /= norm;
         self.z /= norm;
     }
+
+    /// Returns a normalized version of the vector
+    pub fn normalized(&self) -> Self {
+        let norm = self.norm();
+        Vect {
+            x: self.x / norm,
+            y: self.y / norm,
+            z: self.z / norm,
+        }
+    }
 }
 
 impl Add for Vect {
@@ -36,6 +46,39 @@ impl Add for Vect {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z,
+        }
+    }
+}
+
+impl Sub for Vect {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z,
+        }
+    }
+}
+
+impl Mul for Vect {
+    type Output = f64;
+
+    // Scalar product
+    fn mul(self, other: Self) -> f64 {
+        self.x * other.x + self.y * other.y + self.z * other.z
+    }
+}
+
+impl Mul<Vect> for f64 {
+    type Output = Vect;
+
+    fn mul(self, other: Vect) -> Vect {
+        Vect {
+            x: self * other.x,
+            y: self * other.y,
+            z: self * other.z,
         }
     }
 }
