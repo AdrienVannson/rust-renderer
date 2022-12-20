@@ -3,9 +3,17 @@ use crate::primitive::Primitive;
 use crate::ray::Ray;
 use crate::vect::Vect;
 
-struct Sphere {
+pub struct Sphere {
     center: Vect,
     radius: f64,
+}
+
+impl Sphere {
+    pub fn new(center: Vect, radius: f64) -> Self {
+        Self {
+            center, radius
+        }
+    }
 }
 
 impl Primitive for Sphere {
