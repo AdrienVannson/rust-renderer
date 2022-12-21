@@ -23,18 +23,17 @@ impl Scene {
 
     /// Returns the object colliding with a ray and the information about the collision
     pub fn collision(&self, ray: Ray) -> Option<(&Box<dyn Shape>, Collision)> {
-        let mut res = None;
+        let mut res: Option<(&Box<dyn Shape>, Collision)> = None;
 
         for obj in self.objects.iter() {
             let current_collision = obj.collision(ray);
 
-            match res {
-                None => res = Some((obj, current_collision)),
-                Some((_, ref chosen_collision)) => {
-                    if current_collision.date < chosen_collision.date {
-                        res = Some((obj, current_collision))
-                    }
+            if let Some((_, ref chosen_collision)) = res {
+                if current_collision.date < chosen_collision.date {
+                    res = Some((obj, current_collision))
                 }
+            } else {
+                res = Some((obj, current_collision))
             }
         }
 
