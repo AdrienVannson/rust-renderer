@@ -1,9 +1,9 @@
 mod collision;
-mod shape;
 mod ray;
+mod scene;
+mod shape;
 mod sphere;
 mod vect;
-mod scene;
 
 use crate::scene::Scene;
 use crate::sphere::Sphere;
