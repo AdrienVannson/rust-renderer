@@ -1,4 +1,5 @@
 mod collision;
+mod color;
 mod ray;
 mod scene;
 mod shape;
