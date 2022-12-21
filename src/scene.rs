@@ -1,5 +1,3 @@
-use std::thread::current;
-
 use crate::collision::Collision;
 use crate::ray::Ray;
 use crate::shape::Shape;
