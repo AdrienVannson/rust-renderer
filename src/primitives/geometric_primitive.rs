@@ -23,7 +23,7 @@ impl Primitive for GeometricPrimitive {
         self.shape.collision(ray).unwrap()
     }
 
-    fn material_at_collition(&self, collision: Collision) -> Material {
+    fn material_at_collition(&self, _collision: Collision) -> Material {
         Material {
             color: Color::new(1., 1., 0.),
         }
