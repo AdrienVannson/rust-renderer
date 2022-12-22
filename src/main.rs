@@ -7,6 +7,7 @@ mod shape;
 mod sphere;
 mod vect;
 mod renderer;
+mod primitive;
 
 use crate::scene::Scene;
 use crate::sphere::Sphere;
