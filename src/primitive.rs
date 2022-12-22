@@ -1,5 +1,5 @@
-use crate::ray::Ray;
 use crate::color::Color;
+use crate::ray::Ray;
 
 /// A primitive is something that can be renderered.
 pub trait Primitive {

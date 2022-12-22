@@ -1,14 +1,14 @@
 mod camera;
 mod collision;
 mod color;
+mod primitive;
+mod primitives;
 mod ray;
+mod renderer;
 mod scene;
 mod shape;
 mod shapes;
 mod vect;
-mod renderer;
-mod primitive;
-mod primitives;
 
 use crate::scene::Scene;
 use crate::shapes::sphere::Sphere;
