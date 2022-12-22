@@ -4,13 +4,13 @@ mod color;
 mod ray;
 mod scene;
 mod shape;
-mod sphere;
+mod shapes;
 mod vect;
 mod renderer;
 mod primitive;
 
 use crate::scene::Scene;
-use crate::sphere::Sphere;
+use crate::shapes::sphere::Sphere;
 use crate::vect::Vect;
 
 fn main() {
