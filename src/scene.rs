@@ -1,11 +1,11 @@
 use crate::camera::Camera;
 use crate::color::Color;
+use crate::primitive::Primitive;
 use crate::ray::Ray;
-use crate::shape::{Shape, Collision};
 
 pub struct Scene {
     pub camera: Camera,
-    objects: Vec<Box<dyn Shape>>,
+    primitives: Vec<Box<dyn Primitive>>,
 }
 
 impl Scene {
@@ -13,32 +13,36 @@ impl Scene {
     pub fn new(camera: Camera) -> Self {
         Scene {
             camera,
-            objects: Vec::new(),
+            primitives: Vec::new(),
         }
     }
 
     /// Adds an object to the scene
-    pub fn add_object(&mut self, obj: Box<dyn Shape>) {
-        self.objects.push(obj);
+    pub fn add_primitive(&mut self, prim: Box<dyn Primitive>) {
+        self.primitives.push(prim);
     }
 
-    /// Returns the object colliding with a ray and the information about the collision
-    pub fn collision(&self, ray: Ray) -> Option<(&Box<dyn Shape>, Collision)> {
-        let mut res: Option<(&Box<dyn Shape>, Collision)> = None;
+    /// Returns the object colliding with a ray
+    fn collision(&self, ray: Ray) -> Option<&Box<dyn Primitive>> {
+        let mut earliest_collision: Option<(&Box<dyn Primitive>, f64)> = None;
 
-        for obj in self.objects.iter() {
-            if let Some(current_collision) = obj.collision(ray) {
-                if let Some((_, ref chosen_collision)) = res {
-                    if current_collision.date < chosen_collision.date {
-                        res = Some((obj, current_collision))
-                    }
-                } else {
-                    res = Some((obj, current_collision))
+        for prim in self.primitives.iter() {
+            if let Some(collision_date) = prim.collision_date(ray) {
+                let earliest_date = match earliest_collision {
+                    None => f64::INFINITY,
+                    Some((_, date)) => date,
+                };
+
+                if collision_date < earliest_date {
+                    earliest_collision = Some((prim, collision_date));
                 }
             }
         }
 
-        res
+        match earliest_collision {
+            None => None,
+            Some((prim, _)) => Some(prim),
+        }
     }
 
     pub fn color(&self, ray: Ray, remaining_depth: i32) -> Color {
@@ -46,7 +50,7 @@ impl Scene {
             return Color::black();
         }
 
-        if let Some((shape, collision)) = self.collision(ray) {
+        if let Some(prim) = self.collision(ray) {
             Color::new(1., 0., 0.)
         } else {
             Color::black()

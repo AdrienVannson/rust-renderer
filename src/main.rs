@@ -9,6 +9,7 @@ mod shapes;
 mod vect;
 
 use crate::camera::Camera;
+use crate::primitives::geometric_primitive::GeometricPrimitive;
 use crate::scene::Scene;
 use crate::shapes::sphere::Sphere;
 use crate::vect::Vect;
@@ -29,8 +30,8 @@ fn main() {
     };
     let mut scene = Scene::new(camera);
 
-    let sphere = Sphere::new(Vect::new(0., 0., 0.), 1.);
-    scene.add_object(Box::new(sphere));
+    let sphere = GeometricPrimitive::new(Box::new(Sphere::new(Vect::new(0., 0., 0.), 1.)));
+    scene.add_primitive(Box::new(sphere));
 
     // Render
     let img = scene.camera.render(&scene);

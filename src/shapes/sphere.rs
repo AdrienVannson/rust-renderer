@@ -1,5 +1,5 @@
 use crate::ray::Ray;
-use crate::shape::{Shape, Collision};
+use crate::shape::{Collision, Shape};
 use crate::vect::Vect;
 
 pub struct Sphere {
@@ -43,7 +43,7 @@ impl Shape for Sphere {
 
             let normal = (pos - self.center).normalized();
 
-            Some (Collision {
+            Some(Collision {
                 date: collision_date,
                 pos,
                 normal,
