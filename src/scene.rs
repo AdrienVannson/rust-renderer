@@ -1,5 +1,4 @@
 use crate::camera::Camera;
-use crate::color::Color;
 use crate::light::Light;
 use crate::primitive::Primitive;
 use crate::ray::Ray;
@@ -52,16 +51,4 @@ impl Scene {
             Some((prim, _)) => Some(prim),
         }
     }
-
-    /*pub fn color(&self, ray: Ray, remaining_depth: i32) -> Color {
-        if remaining_depth == 0 {
-            return Color::black();
-        }
-
-        if let Some(prim) = self.collision(ray) {
-            prim.color(ray, self)
-        } else {
-            Color::black() // Background color
-        }
-    }*/
 }
