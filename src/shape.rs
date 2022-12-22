@@ -3,6 +3,8 @@ use crate::Vect;
 
 pub trait Shape {
     fn collision_date(&self, ray: Ray) -> Option<f64>;
+
+    // TODO no option
     fn collision(&self, ray: Ray) -> Option<Collision>;
 }
 

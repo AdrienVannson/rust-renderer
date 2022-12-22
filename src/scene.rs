@@ -2,6 +2,7 @@ use crate::camera::Camera;
 use crate::light::Light;
 use crate::primitive::Primitive;
 use crate::ray::Ray;
+use crate::shape::Collision;
 
 pub struct Scene {
     pub camera: Camera,
@@ -29,8 +30,9 @@ impl Scene {
         self.primitives.push(prim);
     }
 
-    /// Returns the object colliding with a ray
-    pub fn collision(&self, ray: Ray) -> Option<&Box<dyn Primitive>> {
+    /// Returns the object colliding with a ray and the information abour the
+    /// collision
+    pub fn collision(&self, ray: Ray) -> Option<(&Box<dyn Primitive>, Collision)> {
         let mut earliest_collision: Option<(&Box<dyn Primitive>, f64)> = None;
 
         for prim in self.primitives.iter() {
@@ -48,7 +50,7 @@ impl Scene {
 
         match earliest_collision {
             None => None,
-            Some((prim, _)) => Some(prim),
+            Some((prim, _)) => Some((prim, prim.collision(ray))),
         }
     }
 }

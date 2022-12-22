@@ -1,6 +1,6 @@
 use std::cmp::min;
 
-use crate::{ray::Ray, scene::Scene, vect::Vect, renderer::Renderer};
+use crate::{ray::Ray, renderer::Renderer, scene::Scene, vect::Vect};
 
 pub struct Camera {
     // Position of the focus point
