@@ -14,8 +14,7 @@ impl Renderer for WhittedRayTracer {
                 let to_light = (light.pos - collision.pos).normalized();
 
                 // TODO check if an ogject hides the light
-
-                let intensity_light = -3. * light.intensity * (to_light * ray.dir());
+                let intensity_light = -light.intensity * (to_light * collision.normal);
 
                 if intensity_light > 0. {
                     intensity += intensity_light;
