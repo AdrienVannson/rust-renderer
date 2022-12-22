@@ -1,10 +1,13 @@
+use std::thread::current;
+
 use crate::camera::Camera;
 use crate::collision::Collision;
+use crate::color::Color;
 use crate::ray::Ray;
 use crate::shape::Shape;
 
 pub struct Scene {
-    camera: Camera,
+    pub camera: Camera,
     objects: Vec<Box<dyn Shape>>,
 }
 
@@ -28,6 +31,7 @@ impl Scene {
 
         for obj in self.objects.iter() {
             let current_collision = obj.collision(ray);
+            println!("{}", current_collision.date);
 
             if let Some((_, ref chosen_collision)) = res {
                 if current_collision.date < chosen_collision.date {
@@ -39,5 +43,17 @@ impl Scene {
         }
 
         res
+    }
+
+    pub fn color(&self, ray: Ray, remaining_depth: i32) -> Color {
+        if remaining_depth == 0 {
+            return Color::black();
+        }
+
+        if let Some((shape, collision)) = self.collision(ray) {
+            Color::new(1., 0., 0.)
+        } else {
+            Color::black()
+        }
     }
 }

@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, BitXor, Mul, Sub};
 
 /// Vector in space
 #[derive(Copy, Clone)]
@@ -41,11 +41,11 @@ impl Vect {
 impl Add for Vect {
     type Output = Self;
 
-    fn add(self, other: Self) -> Self {
+    fn add(self, rhs: Self) -> Self {
         Self {
-            x: self.x + other.x,
-            y: self.y + other.y,
-            z: self.z + other.z,
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+            z: self.z + rhs.z,
         }
     }
 }
@@ -53,11 +53,11 @@ impl Add for Vect {
 impl Sub for Vect {
     type Output = Self;
 
-    fn sub(self, other: Self) -> Self {
+    fn sub(self, rhs: Self) -> Self {
         Self {
-            x: self.x - other.x,
-            y: self.y - other.y,
-            z: self.z - other.z,
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z,
         }
     }
 }
@@ -66,19 +66,32 @@ impl Mul for Vect {
     type Output = f64;
 
     // Scalar product
-    fn mul(self, other: Self) -> f64 {
-        self.x * other.x + self.y * other.y + self.z * other.z
+    fn mul(self, rhs: Self) -> f64 {
+        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 }
 
 impl Mul<Vect> for f64 {
     type Output = Vect;
 
-    fn mul(self, other: Vect) -> Vect {
+    fn mul(self, rhs: Vect) -> Vect {
         Vect {
-            x: self * other.x,
-            y: self * other.y,
-            z: self * other.z,
+            x: self * rhs.x,
+            y: self * rhs.y,
+            z: self * rhs.z,
+        }
+    }
+}
+
+// Cross product
+impl BitXor for Vect {
+    type Output = Self;
+
+    fn bitxor(self, rhs: Self) -> Vect {
+        Vect {
+            x: self.y * rhs.z - rhs.y * self.z,
+            y: self.z * rhs.x - rhs.z * self.x,
+            z: self.x * rhs.y - rhs.x * self.y,
         }
     }
 }

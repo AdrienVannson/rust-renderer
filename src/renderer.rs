@@ -1,6 +1,7 @@
 use crate::color::Color;
 use crate::ray::Ray;
 
+// TODEL ?
 pub struct Renderer {}
 
 impl Renderer {

@@ -34,12 +34,23 @@ fn main() {
     let sphere = Sphere::new(Vect::new(0., 0., 0.), 1.);
     scene.add_object(Box::new(sphere));
 
+    // Render
+    let img = scene.camera.render(&scene);
+
     // Write the output image
     let mut output: image::RgbImage = image::ImageBuffer::new(width, height);
 
     for x in 0..width {
         for y in 0..height {
-            output.put_pixel(x, y, image::Rgb([255, 0, 0]));
+            output.put_pixel(
+                x,
+                y,
+                image::Rgb([
+                    img[x as usize][y as usize].0,
+                    img[x as usize][y as usize].1,
+                    img[x as usize][y as usize].2,
+                ]),
+            );
         }
     }
 
