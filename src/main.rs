@@ -1,3 +1,4 @@
+mod camera;
 mod collision;
 mod color;
 mod ray;
@@ -5,6 +6,7 @@ mod scene;
 mod shape;
 mod sphere;
 mod vect;
+mod renderer;
 
 use crate::scene::Scene;
 use crate::sphere::Sphere;
