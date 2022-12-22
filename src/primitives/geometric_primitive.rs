@@ -19,6 +19,6 @@ impl Primitive for GeometricPrimitive {
     }
 
     fn color(&self, ray: Ray) -> Color {
-        Color::new(1., 0., 0.)
+        Color::new(1., 1., 0.)
     }
 }

@@ -51,9 +51,9 @@ impl Scene {
         }
 
         if let Some(prim) = self.collision(ray) {
-            Color::new(1., 0., 0.)
+            prim.color(ray)
         } else {
-            Color::black()
+            Color::black() // Background color
         }
     }
 }
