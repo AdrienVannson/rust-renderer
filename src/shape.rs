@@ -9,6 +9,7 @@ pub trait Shape {
 }
 
 /// Collision between a ray and a shape
+#[derive(Copy, Clone)]
 pub struct Collision {
     /// The date at which the collision occurs
     pub date: f64,

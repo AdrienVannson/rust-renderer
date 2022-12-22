@@ -15,7 +15,7 @@ mod vect;
 use crate::camera::Camera;
 use crate::light::Light;
 use crate::primitives::geometric_primitive::GeometricPrimitive;
-use crate::renderers::no_light_renderer::NoLightRenderer;
+use crate::renderers::whitted_ray_tracer::WhittedRayTracer;
 use crate::scene::Scene;
 use crate::shapes::sphere::Sphere;
 use crate::vect::Vect;
@@ -46,7 +46,7 @@ fn main() {
     scene.add_primitive(Box::new(sphere));
 
     // Render
-    let renderer = NoLightRenderer {};
+    let renderer = WhittedRayTracer {};
 
     let img = scene.camera.render(&scene, &renderer);
 

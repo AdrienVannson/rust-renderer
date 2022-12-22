@@ -6,7 +6,7 @@ use crate::shape::Collision;
 
 pub struct Scene {
     pub camera: Camera,
-    lights: Vec<Light>,
+    pub lights: Vec<Light>,
     primitives: Vec<Box<dyn Primitive>>,
 }
 
