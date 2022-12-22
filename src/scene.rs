@@ -30,15 +30,14 @@ impl Scene {
         let mut res: Option<(&Box<dyn Shape>, Collision)> = None;
 
         for obj in self.objects.iter() {
-            let current_collision = obj.collision(ray);
-            println!("{}", current_collision.date);
-
-            if let Some((_, ref chosen_collision)) = res {
-                if current_collision.date < chosen_collision.date {
+            if let Some(current_collision) = obj.collision(ray) {
+                if let Some((_, ref chosen_collision)) = res {
+                    if current_collision.date < chosen_collision.date {
+                        res = Some((obj, current_collision))
+                    }
+                } else {
                     res = Some((obj, current_collision))
                 }
-            } else {
-                res = Some((obj, current_collision))
             }
         }
 
