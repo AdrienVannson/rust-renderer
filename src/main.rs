@@ -1,9 +1,12 @@
 mod camera;
 mod color;
 mod light;
+mod material;
 mod primitive;
 mod primitives;
 mod ray;
+mod renderer;
+mod renderers;
 mod scene;
 mod shape;
 mod shapes;
@@ -15,6 +18,7 @@ use crate::primitives::geometric_primitive::GeometricPrimitive;
 use crate::scene::Scene;
 use crate::shapes::sphere::Sphere;
 use crate::vect::Vect;
+use crate::renderers::no_light_renderer::NoLightRenderer;
 
 fn main() {
     let width = 640;
@@ -42,7 +46,9 @@ fn main() {
     scene.add_primitive(Box::new(sphere));
 
     // Render
-    let img = scene.camera.render(&scene);
+    let renderer = NoLightRenderer {};
+
+    let img = scene.camera.render(&scene, &renderer);
 
     // Write the output image
     let mut output: image::RgbImage = image::ImageBuffer::new(width, height);

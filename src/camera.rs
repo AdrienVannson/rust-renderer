@@ -1,6 +1,6 @@
 use std::cmp::min;
 
-use crate::{ray::Ray, scene::Scene, vect::Vect};
+use crate::{ray::Ray, scene::Scene, vect::Vect, renderer::Renderer};
 
 pub struct Camera {
     // Position of the focus point
@@ -17,7 +17,7 @@ pub struct Camera {
 
 impl Camera {
     /// Returns the final image
-    pub fn render(&self, scene: &Scene) -> Vec<Vec<(u8, u8, u8)>> {
+    pub fn render(&self, scene: &Scene, renderer: &dyn Renderer) -> Vec<Vec<(u8, u8, u8)>> {
         let mut image = Vec::new();
 
         let mut i = Vect::new(self.dir.y, -self.dir.x, 0.).normalized();
@@ -42,7 +42,8 @@ impl Camera {
                 let ray = Ray::new(self.pos, dir);
 
                 // Get the color
-                let color = scene.color(ray, 3);
+                //let color = scene.color(ray, 3);
+                let color = renderer.color(ray, scene);
 
                 // Compute the pixel
                 let pixel = (

@@ -31,7 +31,7 @@ impl Scene {
     }
 
     /// Returns the object colliding with a ray
-    fn collision(&self, ray: Ray) -> Option<&Box<dyn Primitive>> {
+    pub fn collision(&self, ray: Ray) -> Option<&Box<dyn Primitive>> {
         let mut earliest_collision: Option<(&Box<dyn Primitive>, f64)> = None;
 
         for prim in self.primitives.iter() {
@@ -53,7 +53,7 @@ impl Scene {
         }
     }
 
-    pub fn color(&self, ray: Ray, remaining_depth: i32) -> Color {
+    /*pub fn color(&self, ray: Ray, remaining_depth: i32) -> Color {
         if remaining_depth == 0 {
             return Color::black();
         }
@@ -63,5 +63,5 @@ impl Scene {
         } else {
             Color::black() // Background color
         }
-    }
+    }*/
 }

@@ -1,7 +1,7 @@
 use crate::color::Color;
+use crate::material::Material;
 use crate::primitive::Primitive;
 use crate::ray::Ray;
-use crate::scene::Scene;
 use crate::shape::Shape;
 
 pub struct GeometricPrimitive {
@@ -19,12 +19,14 @@ impl Primitive for GeometricPrimitive {
         self.shape.collision_date(ray)
     }
 
-    fn color(&self, ray: Ray, scene: &Scene) -> Color {
+    fn material_at_collition(&self, ray: Ray) -> Material {
         let collision = self
             .shape
             .collision(ray)
             .expect("the ray should collide the shape");
 
-        Color::new(1., 1., 0.)
+        Material {
+            color: Color::new(1., 1., 0.),
+        }
     }
 }
