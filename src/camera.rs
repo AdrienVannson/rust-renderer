@@ -9,8 +9,8 @@ pub struct Camera {
     pub dir: Vect,
 
     // Dimensions of the image
-    pub width: f64,
-    pub height: f64,
+    pub width: u32,
+    pub height: u32,
 }
 
 impl Camera {

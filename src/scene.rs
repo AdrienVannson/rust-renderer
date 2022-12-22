@@ -1,15 +1,18 @@
+use crate::camera::Camera;
 use crate::collision::Collision;
 use crate::ray::Ray;
 use crate::shape::Shape;
 
 pub struct Scene {
+    camera: Camera,
     objects: Vec<Box<dyn Shape>>,
 }
 
 impl Scene {
     /// Creates a new scene
-    pub fn new() -> Self {
+    pub fn new(camera: Camera) -> Self {
         Scene {
+            camera,
             objects: Vec::new(),
         }
     }

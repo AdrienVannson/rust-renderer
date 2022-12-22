@@ -10,6 +10,7 @@ mod shape;
 mod shapes;
 mod vect;
 
+use crate::camera::Camera;
 use crate::scene::Scene;
 use crate::shapes::sphere::Sphere;
 use crate::vect::Vect;
@@ -18,12 +19,23 @@ fn main() {
     let width = 640;
     let height = 360;
 
-    let mut output: image::RgbImage = image::ImageBuffer::new(width, height);
-
-    let mut scene = Scene::new();
+    let camera = {
+        let pos = Vect::new(30., 0., 6.);
+        let dir = -2.5 * pos.normalized();
+        Camera {
+            pos,
+            dir,
+            width,
+            height,
+        }
+    };
+    let mut scene = Scene::new(camera);
 
     let sphere = Sphere::new(Vect::new(0., 0., 0.), 1.);
     scene.add_object(Box::new(sphere));
+
+    // Write the output image
+    let mut output: image::RgbImage = image::ImageBuffer::new(width, height);
 
     for x in 0..width {
         for y in 0..height {
