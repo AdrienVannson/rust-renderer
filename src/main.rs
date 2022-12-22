@@ -42,7 +42,7 @@ fn main() {
         intensity: 1.,
     });
 
-    let sphere = GeometricPrimitive::new(Box::new(Sphere::new(Vect::new(0., 0., 0.), 1.)));
+    let sphere = GeometricPrimitive::new(Box::new(Sphere::new(Vect::new(0., 0., 0.), 2.)));
     scene.add_primitive(Box::new(sphere));
 
     // Render
