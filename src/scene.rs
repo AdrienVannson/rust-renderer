@@ -1,10 +1,12 @@
 use crate::camera::Camera;
 use crate::color::Color;
+use crate::light::Light;
 use crate::primitive::Primitive;
 use crate::ray::Ray;
 
 pub struct Scene {
     pub camera: Camera,
+    lights: Vec<Light>,
     primitives: Vec<Box<dyn Primitive>>,
 }
 
@@ -13,8 +15,14 @@ impl Scene {
     pub fn new(camera: Camera) -> Self {
         Scene {
             camera,
+            lights: Vec::new(),
             primitives: Vec::new(),
         }
+    }
+
+    /// Adds a light to the scene
+    pub fn add_light(&mut self, light: Light) {
+        self.lights.push(light);
     }
 
     /// Adds an object to the scene

@@ -1,5 +1,6 @@
 mod camera;
 mod color;
+mod light;
 mod primitive;
 mod primitives;
 mod ray;
@@ -9,6 +10,7 @@ mod shapes;
 mod vect;
 
 use crate::camera::Camera;
+use crate::light::Light;
 use crate::primitives::geometric_primitive::GeometricPrimitive;
 use crate::scene::Scene;
 use crate::shapes::sphere::Sphere;
@@ -28,7 +30,13 @@ fn main() {
             height,
         }
     };
+
     let mut scene = Scene::new(camera);
+
+    scene.add_light(Light {
+        pos: Vect::new(0., 50., 150.),
+        intensity: 1.,
+    });
 
     let sphere = GeometricPrimitive::new(Box::new(Sphere::new(Vect::new(0., 0., 0.), 1.)));
     scene.add_primitive(Box::new(sphere));
