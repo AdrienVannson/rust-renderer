@@ -3,7 +3,6 @@ mod color;
 mod primitive;
 mod primitives;
 mod ray;
-mod renderer;
 mod scene;
 mod shape;
 mod shapes;
