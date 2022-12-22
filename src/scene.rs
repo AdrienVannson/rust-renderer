@@ -1,10 +1,7 @@
-use std::thread::current;
-
 use crate::camera::Camera;
-use crate::collision::Collision;
 use crate::color::Color;
 use crate::ray::Ray;
-use crate::shape::Shape;
+use crate::shape::{Shape, Collision};
 
 pub struct Scene {
     pub camera: Camera,

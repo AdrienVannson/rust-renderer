@@ -1,6 +1,5 @@
-use crate::collision::Collision;
 use crate::ray::Ray;
-use crate::shape::Shape;
+use crate::shape::{Shape, Collision};
 use crate::vect::Vect;
 
 pub struct Sphere {

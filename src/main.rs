@@ -1,5 +1,4 @@
 mod camera;
-mod collision;
 mod color;
 mod primitive;
 mod primitives;
