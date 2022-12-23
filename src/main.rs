@@ -57,7 +57,7 @@ fn main() {
         for y in 0..height {
             output.put_pixel(
                 x,
-                y,
+                height - y - 1,
                 image::Rgb([
                     img[x as usize][y as usize].0,
                     img[x as usize][y as usize].1,

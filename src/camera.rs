@@ -20,13 +20,10 @@ impl Camera {
     pub fn render(&self, scene: &Scene, renderer: &dyn Renderer) -> Vec<Vec<(u8, u8, u8)>> {
         let mut image = Vec::new();
 
-        let mut i = Vect::new(self.dir.y, -self.dir.x, 0.).normalized();
-        let mut j = (self.dir ^ i).normalized();
+        let i = Vect::new(self.dir.y, -self.dir.x, 0.).normalized();
+        let j = -(self.dir ^ i).normalized();
 
-        if j.z < 0. {
-            i = -1. * i;
-            j = -1. * j;
-        }
+        assert!(j.z >= 0.);
 
         for x in 0..self.width {
             let mut column = Vec::new();

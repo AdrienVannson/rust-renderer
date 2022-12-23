@@ -1,4 +1,4 @@
-use std::ops::{Add, BitXor, Mul, Sub};
+use std::ops::{Add, BitXor, Mul, Neg, Sub};
 
 /// Vector in space
 #[derive(Copy, Clone)]
@@ -58,6 +58,18 @@ impl Sub for Vect {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
+        }
+    }
+}
+
+impl Neg for Vect {
+    type Output = Self;
+
+    fn neg(self) -> Self {
+        Self {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
         }
     }
 }
