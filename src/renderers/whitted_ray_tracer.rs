@@ -1,4 +1,4 @@
-use crate::{renderer::Renderer, ray::Ray, scene::Scene, color::Color};
+use crate::{color::Color, ray::Ray, renderer::Renderer, scene::Scene};
 
 pub struct WhittedRayTracer {}
 
@@ -14,7 +14,7 @@ impl Renderer for WhittedRayTracer {
                 let to_light = (light.pos - collision.pos).normalized();
 
                 // TODO check if an ogject hides the light
-                let intensity_light = -light.intensity * (to_light * collision.normal);
+                let intensity_light = light.intensity * (to_light * collision.normal);
 
                 if intensity_light > 0. {
                     intensity += intensity_light;
