@@ -50,7 +50,7 @@ impl Scene {
 
         match earliest_collision {
             None => None,
-            Some((prim, _)) => Some((prim, prim.collision(ray))),
+            Some((prim, _)) => Some((prim, prim.collision(ray).unwrap())),
         }
     }
 }

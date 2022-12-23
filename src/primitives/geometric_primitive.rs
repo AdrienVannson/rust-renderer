@@ -19,8 +19,8 @@ impl Primitive for GeometricPrimitive {
         self.shape.collision_date(ray)
     }
 
-    fn collision(&self, ray: Ray) -> Collision {
-        self.shape.collision(ray).unwrap()
+    fn collision(&self, ray: Ray) -> Option<Collision> {
+        self.shape.collision(ray)
     }
 
     fn material_at_collition(&self, _collision: Collision) -> Material {
