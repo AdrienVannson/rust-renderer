@@ -17,7 +17,15 @@ pub struct Checkerboard {
 }
 
 impl Checkerboard {
-    pub fn new(origin: Vect, width: f64, height: f64, lines_count: i32, columns_count: i32, color1: Color, color2: Color) -> Self {
+    pub fn new(
+        origin: Vect,
+        width: f64,
+        height: f64,
+        lines_count: i32,
+        columns_count: i32,
+        color1: Color,
+        color2: Color,
+    ) -> Self {
         Checkerboard {
             origin,
             width,
@@ -65,8 +73,10 @@ impl Primitive for Checkerboard {
     }
 
     fn material_at_collition(&self, collision: Collision) -> Material {
-        let index_x = ((collision.pos.x - self.origin.x) / self.width * self.columns_count as f64) as usize;
-        let index_y = ((collision.pos.y - self.origin.y) / self.height * self.lines_count as f64) as usize;
+        let index_x =
+            ((collision.pos.x - self.origin.x) / self.width * self.columns_count as f64) as usize;
+        let index_y =
+            ((collision.pos.y - self.origin.y) / self.height * self.lines_count as f64) as usize;
 
         Material {
             color: self.colors[((index_x + index_y) % 2) as usize],

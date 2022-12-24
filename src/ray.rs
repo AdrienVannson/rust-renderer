@@ -1,6 +1,6 @@
 use crate::vect::Vect;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Ray {
     pos: Vect,
     dir: Vect, // This vector should be normalized
@@ -18,5 +18,10 @@ impl Ray {
 
     pub fn dir(&self) -> Vect {
         self.dir
+    }
+
+    /// Move the position of the ray in the direction pointed by the ray
+    pub fn move_by(&mut self, dist: f64) {
+        self.pos += dist * self.dir;
     }
 }

@@ -11,13 +11,18 @@ impl Renderer for WhittedRayTracer {
             let mut intensity = 0.;
 
             for light in scene.lights.iter() {
-                let to_light = (light.pos - collision.pos).normalized();
+                let to_light = light.pos - collision.pos;
 
-                // TODO check if an ogject hides the light
-                let intensity_light = light.intensity * (to_light * collision.normal);
+                // Check if an ogject hides the light
+                let mut ray_to_light = Ray::new(collision.pos, to_light);
+                ray_to_light.move_by(1e-4); // TODO make this value depend on the scene
 
-                if intensity_light > 0. {
-                    intensity += intensity_light;
+                if scene.collision_date(ray_to_light) >= to_light.norm() {
+                    let intensity_light = light.intensity * (ray_to_light.dir() * collision.normal);
+
+                    if intensity_light > 0. {
+                        intensity += intensity_light;
+                    }
                 }
             }
 

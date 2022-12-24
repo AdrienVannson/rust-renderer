@@ -30,7 +30,22 @@ impl Scene {
         self.primitives.push(prim);
     }
 
-    /// Returns the object colliding with a ray and the information abour the
+    /// Returns the time until a ray touches an object of the scene
+    pub fn collision_date(&self, ray: Ray) -> f64 {
+        let mut earliest_collision = f64::INFINITY;
+
+        for prim in self.primitives.iter() {
+            if let Some(collision_date) = prim.collision_date(ray) {
+                if collision_date < earliest_collision {
+                    earliest_collision = collision_date;
+                }
+            }
+        }
+
+        earliest_collision
+    }
+
+    /// Returns the object colliding with a ray and the information about the
     /// collision
     pub fn collision(&self, ray: Ray) -> Option<(&Box<dyn Primitive>, Collision)> {
         let mut earliest_collision: Option<(&Box<dyn Primitive>, f64)> = None;

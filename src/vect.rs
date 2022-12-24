@@ -1,7 +1,7 @@
-use std::ops::{Add, BitXor, Mul, Neg, Sub};
+use std::ops::{Add, AddAssign, BitXor, Mul, Neg, Sub};
 
 /// Vector in space
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Vect {
     pub x: f64,
     pub y: f64,
@@ -71,6 +71,14 @@ impl Neg for Vect {
             y: -self.y,
             z: -self.z,
         }
+    }
+}
+
+impl AddAssign for Vect {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
     }
 }
 
