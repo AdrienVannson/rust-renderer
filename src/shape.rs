@@ -1,5 +1,5 @@
 use crate::ray::Ray;
-use crate::Vect;
+use crate::vect::Vect;
 
 pub trait Shape {
     fn collision_date(&self, ray: Ray) -> Option<f64>;
