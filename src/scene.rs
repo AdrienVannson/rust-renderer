@@ -3,6 +3,7 @@ use crate::light::Light;
 use crate::primitive::Primitive;
 use crate::ray::Ray;
 use crate::shape::Collision;
+use crate::renderer::Renderer;
 
 pub struct Scene {
     pub camera: Camera,
@@ -28,6 +29,11 @@ impl Scene {
     /// Adds an object to the scene
     pub fn add_primitive(&mut self, prim: Box<dyn Primitive>) {
         self.primitives.push(prim);
+    }
+
+    /// Renders the scene
+    pub fn render(&self, renderer: &dyn Renderer) -> Vec<Vec<(u8, u8, u8)>> {
+        self.camera.render(self, renderer)
     }
 
     /// Returns the time until a ray touches an object of the scene
