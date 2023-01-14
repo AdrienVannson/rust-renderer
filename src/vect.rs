@@ -21,19 +21,19 @@ impl Vect {
 
     /// Normalizes the vector
     pub fn normalize(&mut self) {
-        let norm = self.norm();
-        self.x /= norm;
-        self.y /= norm;
-        self.z /= norm;
+        let norm_inverse = 1. / self.norm();
+        self.x *= norm_inverse;
+        self.y *= norm_inverse;
+        self.z *= norm_inverse;
     }
 
     /// Returns a normalized version of the vector
     pub fn normalized(&self) -> Self {
-        let norm = self.norm();
+        let norm_inverse = 1. / self.norm();
         Vect {
-            x: self.x / norm,
-            y: self.y / norm,
-            z: self.z / norm,
+            x: self.x * norm_inverse,
+            y: self.y * norm_inverse,
+            z: self.z * norm_inverse,
         }
     }
 }
@@ -122,9 +122,12 @@ mod tests {
 
     #[test]
     fn test_norm() {
-        let v = Vect::new(1., -1., 0.);
+        let mut v = Vect::new(1., -1., 0.);
         let norm = v.norm();
 
         assert!(1.4142 <= norm && norm <= 1.4143);
+
+        v.normalize();
+        assert!(0.99 <= v.norm() && v.norm() <= 1.01);
     }
 }
