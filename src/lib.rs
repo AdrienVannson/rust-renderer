@@ -4,12 +4,12 @@ pub mod light;
 pub mod material;
 pub mod matrix;
 pub mod primitive;
+pub mod primitives;
 pub mod ray;
 pub mod renderer;
+pub mod renderers;
 pub mod scene;
 pub mod shape;
-pub mod vect;
-
-pub mod primitives;
-pub mod renderers;
 pub mod shapes;
+pub mod transform;
+pub mod vect;
