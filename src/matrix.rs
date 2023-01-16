@@ -11,10 +11,15 @@ pub struct Matrix4x4 {
 
 impl Matrix4x4 {
     /// Returns the identity matrix
-    pub fn new() -> Self {
+    pub fn identity() -> Self {
         Self {
             m: [[1., 0., 0., 0.], [0., 1., 0., 0.], [0., 0., 1., 0.]],
         }
+    }
+
+    /// Builds a new instance from raw data
+    pub fn new(mat: [[f64; 4]; 3]) -> Self {
+        Self { m: mat }
     }
 
     /// Performs a matrix-vector multiplication. The first three components are
