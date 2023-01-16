@@ -67,11 +67,19 @@ impl Transform {
         }
     }
 
-    /// Applies the transformation on a ray
+    /// Applies the transformation to a ray
     pub fn apply_ray(&self, ray: Ray) -> Ray {
         Ray {
             pos: self.apply_point(ray.pos),
             dir: self.apply_vector(ray.dir),
+        }
+    }
+
+    /// Applies the inverse transformation to a ray
+    pub fn apply_inv_ray(&self, ray: Ray) -> Ray {
+        Ray {
+            pos: self.apply_inv_point(ray.pos),
+            dir: self.apply_inv_vector(ray.dir),
         }
     }
 }
