@@ -1,4 +1,4 @@
-use crate::{matrix::Matrix4x4, vect::Vect};
+use crate::{matrix::Matrix4x4, ray::Ray, vect::Vect};
 
 pub struct Transform {
     mat: Matrix4x4,
@@ -16,8 +16,8 @@ impl Transform {
 
     /// Returns a translation
     pub fn new_translation(v: Vect) -> Self {
-        let mat = Matrix4x4::new([[0., 0., 0., v.x], [0., 0., 0., v.y], [0., 0., 0., v.z]]);
-        let mat_inv = Matrix4x4::new([[0., 0., 0., -v.x], [0., 0., 0., -v.y], [0., 0., 0., -v.z]]);
+        let mat = Matrix4x4::new([[1., 0., 0., v.x], [0., 1., 0., v.y], [0., 0., 1., v.z]]);
+        let mat_inv = Matrix4x4::new([[1., 0., 0., -v.x], [0., 1., 0., -v.y], [0., 0., 1., -v.z]]);
         Self { mat, mat_inv }
     }
 
@@ -64,6 +64,14 @@ impl Transform {
             x: m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z,
             y: m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z,
             z: m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z,
+        }
+    }
+
+    /// Applies the transformation on a ray
+    pub fn apply_ray(&self, ray: Ray) -> Ray {
+        Ray {
+            pos: self.apply_point(ray.pos),
+            dir: self.apply_vector(ray.dir),
         }
     }
 }
