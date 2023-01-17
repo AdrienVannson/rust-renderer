@@ -28,7 +28,7 @@ impl Primitive for TransformedPrimitive {
             Some(col) => Some(Collision {
                 date: col.date,
                 pos: self.object_to_world.apply_point(col.pos),
-                normal: self.object_to_world.apply_inv_normal(col.normal),
+                normal: self.object_to_world.apply_inv_normal(col.normal).normalized(),
             }),
         }
     }

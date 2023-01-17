@@ -21,6 +21,13 @@ impl Transform {
         Self { mat, mat_inv }
     }
 
+    /// Returns a scaling
+    pub fn new_scaling(sx: f64, sy: f64, sz: f64) -> Self {
+        let mat = Matrix4x4::new([[sx, 0., 0., 0.], [0., sy, 0., 0.], [0., 0., sz, 0.]]);
+        let mat_inv = Matrix4x4::new([[1. / sx, 0., 0., 0.], [0., 1. / sy, 0., 0.], [0., 0., 1. / sz, 0.]]);
+        Self { mat, mat_inv }
+    }
+
     /// Applies the transformation to a vector
     pub fn apply_vector(&self, v: Vect) -> Vect {
         // Do not apply translations to vectors
@@ -49,6 +56,7 @@ impl Transform {
     pub fn apply_normal(&self, v: Vect) -> Vect {
         let m = &self.mat_inv.m;
 
+        // The matrix is transposed
         Vect {
             x: m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z,
             y: m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z,
@@ -60,6 +68,7 @@ impl Transform {
     pub fn apply_inv_normal(&self, v: Vect) -> Vect {
         let m = &self.mat.m;
 
+        // The matrix is transposed
         Vect {
             x: m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z,
             y: m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z,
