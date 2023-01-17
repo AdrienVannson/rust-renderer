@@ -21,6 +21,11 @@ impl Transform {
         Self { mat, mat_inv }
     }
 
+    /// Returns a uniform scaling
+    pub fn new_uniform_scaling(s: f64) -> Self {
+        Self::new_scaling(s, s, s)
+    }
+
     /// Returns a scaling
     pub fn new_scaling(sx: f64, sy: f64, sz: f64) -> Self {
         let mat = Matrix4x4::new([[sx, 0., 0., 0.], [0., sy, 0., 0.], [0., 0., sz, 0.]]);
