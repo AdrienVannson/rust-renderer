@@ -9,6 +9,15 @@ pub struct Vect {
 }
 
 impl Vect {
+    /// Create the vector (0, 0, 0)
+    pub fn zero() -> Self {
+        Self {
+            x: 0.,
+            y: 0.,
+            z: 0.,
+        }
+    }
+
     /// Creates a new vector
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z }
