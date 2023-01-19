@@ -19,16 +19,23 @@ impl TransformedPrimitive {
 
 impl Primitive for TransformedPrimitive {
     fn collision_date(&self, ray: Ray) -> Option<f64> {
-        self.primitive.collision_date(self.object_to_world.apply_inv_ray(ray))
+        self.primitive
+            .collision_date(self.object_to_world.apply_inv_ray(ray))
     }
 
     fn collision(&self, ray: Ray) -> Option<Collision> {
-        match self.primitive.collision(self.object_to_world.apply_inv_ray(ray)) {
+        match self
+            .primitive
+            .collision(self.object_to_world.apply_inv_ray(ray))
+        {
             None => None,
             Some(col) => Some(Collision {
                 date: col.date,
                 pos: self.object_to_world.apply_point(col.pos),
-                normal: self.object_to_world.apply_inv_normal(col.normal).normalized(),
+                normal: self
+                    .object_to_world
+                    .apply_inv_normal(col.normal)
+                    .normalized(),
             }),
         }
     }

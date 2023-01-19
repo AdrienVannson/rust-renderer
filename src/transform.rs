@@ -29,7 +29,11 @@ impl Transform {
     /// Returns a scaling
     pub fn new_scaling(sx: f64, sy: f64, sz: f64) -> Self {
         let mat = Matrix4x4::new([[sx, 0., 0., 0.], [0., sy, 0., 0.], [0., 0., sz, 0.]]);
-        let mat_inv = Matrix4x4::new([[1. / sx, 0., 0., 0.], [0., 1. / sy, 0., 0.], [0., 0., 1. / sz, 0.]]);
+        let mat_inv = Matrix4x4::new([
+            [1. / sx, 0., 0., 0.],
+            [0., 1. / sy, 0., 0.],
+            [0., 0., 1. / sz, 0.],
+        ]);
         Self { mat, mat_inv }
     }
 

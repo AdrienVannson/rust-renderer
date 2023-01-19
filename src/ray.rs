@@ -24,4 +24,9 @@ impl Ray {
     pub fn move_by(&mut self, dist: f64) {
         self.pos += dist * self.dir;
     }
+
+    /// Returns the point on the ray at a distance t of the origin of the ray
+    pub fn pos_in(&self, t: f64) -> Vect {
+        self.pos + t * self.dir
+    }
 }
