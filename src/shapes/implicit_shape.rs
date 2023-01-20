@@ -14,6 +14,8 @@ pub trait ImplicitShape {
 
 impl<T: ImplicitShape> Shape for T {
     fn collision_date(&self, ray: Ray) -> Option<f64> {
+        let ray_norm_inv = 1. / ray.dir.norm();
+
         let mut t = 0.;
 
         while t < 100. {
@@ -23,7 +25,7 @@ impl<T: ImplicitShape> Shape for T {
                 return Some(t);
             }
 
-            t += dist;
+            t += dist * ray_norm_inv;
         }
 
         None
