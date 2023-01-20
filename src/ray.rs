@@ -3,7 +3,7 @@ use crate::vect::Vect;
 #[derive(Copy, Clone, Debug)]
 pub struct Ray {
     pub pos: Vect,
-    pub dir: Vect, // This vector should be normalized
+    pub dir: Vect, // Not necessarily normalized
 }
 
 impl Ray {
