@@ -34,7 +34,7 @@ impl Primitive for TransformedPrimitive {
                 pos: self.object_to_world.apply_point(col.pos),
                 normal: self
                     .object_to_world
-                    .apply_inv_normal(col.normal)
+                    .apply_normal(col.normal)
                     .normalized(),
             }),
         }
