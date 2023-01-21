@@ -7,7 +7,7 @@ pub struct Transform {
 
 impl Transform {
     /// Returns the identity transformation
-    pub fn new() -> Self {
+    pub fn new_identity() -> Self {
         Transform {
             mat: Matrix4x4::identity(),
             mat_inv: Matrix4x4::identity(),
@@ -35,6 +35,69 @@ impl Transform {
             [0., 0., 1. / sz, 0.],
         ]);
         Self { mat, mat_inv }
+    }
+
+    /// Returns a rotation around the x axis
+    pub fn new_x_rotation(theta: f64) -> Self {
+        let cos_theta = theta.cos();
+        let sin_theta = theta.sin();
+
+        let mat = Matrix4x4::new([
+            [1., 0., 0., 0.],
+            [0., cos_theta, -sin_theta, 0.],
+            [0., sin_theta, cos_theta, 0.]
+        ]);
+        let mat_inv = Matrix4x4::new([
+            [1., 0., 0., 0.],
+            [0., cos_theta, sin_theta, 0.],
+            [0., -sin_theta, cos_theta, 0.]
+        ]);
+        Self { mat, mat_inv }
+    }
+
+    /// Returns a rotation around the y axis
+    pub fn new_y_rotation(theta: f64) -> Self {
+        let cos_theta = theta.cos();
+        let sin_theta = theta.sin();
+
+        let mat = Matrix4x4::new([
+            [cos_theta, 0., sin_theta, 0.],
+            [0., 1., 0., 0.],
+            [-sin_theta, 0., cos_theta, 0.]
+        ]);
+        let mat_inv = Matrix4x4::new([
+            [cos_theta, 0., -sin_theta, 0.],
+            [0., 1., 0., 0.],
+            [sin_theta, 0., cos_theta, 0.]
+        ]);
+        Self { mat, mat_inv }
+    }
+
+    /// Returns a rotation around the z axis
+    pub fn new_z_rotation(theta: f64) -> Self {
+        let cos_theta = theta.cos();
+        let sin_theta = theta.sin();
+
+        let mat = Matrix4x4::new([
+            [cos_theta, -sin_theta, 0., 0.],
+            [sin_theta, cos_theta, 0., 0.],
+            [0., 0., 1., 0.]
+        ]);
+        let mat_inv = Matrix4x4::new([
+            [cos_theta, sin_theta, 0., 0.],
+            [-sin_theta, cos_theta, 0., 0.],
+            [0., 0., 1., 0.]
+        ]);
+        Self { mat, mat_inv }
+    }
+
+    /// Returns the transformation obtained when applying other after the
+    /// current tranformation
+    pub fn add(&self, other: &Transform) -> Self {
+        Self {
+            mat: &other.mat * &self.mat,
+            mat_inv: &self.mat_inv * &other.mat_inv
+        }
     }
 
     /// Applies the transformation to a vector
