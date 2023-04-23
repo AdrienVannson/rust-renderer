@@ -6,6 +6,8 @@ use crate::{
 
 pub trait ImplicitShape {
     /// Returns a minoration of the distance between a point and the object.
+    /// If the object has an inside, the value is negative for points inside
+    /// the object.
     fn estimated_distance(&self, point: Vect) -> f64;
 
     /// Returns the gradient of the estimated distance at a given point.
@@ -19,9 +21,9 @@ impl<T: ImplicitShape> Shape for T {
         let mut t = 0.;
 
         while t < 100. {
-            let dist = self.estimated_distance(ray.pos_in(t));
+            let dist = self.estimated_distance(ray.pos_in(t)).abs();
 
-            if dist < 1e-5 {
+            if dist < 1e-8 {
                 return Some(t);
             }
 
