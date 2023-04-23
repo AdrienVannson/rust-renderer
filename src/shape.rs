@@ -15,7 +15,7 @@ impl dyn Shape {
     pub fn ray_starts_inside(&self, ray: Ray) -> bool {
         match self.collision(ray) {
             None => false,
-            Some(col) => col.normal * ray.dir > 0.
+            Some(col) => col.normal * ray.dir > 0.,
         }
     }
 }

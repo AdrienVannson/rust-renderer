@@ -1,4 +1,4 @@
-use crate::{shape::Shape, shape::Collision, ray::Ray};
+use crate::{ray::Ray, shape::Collision, shape::Shape};
 
 /// Intersection of two shapes
 pub struct Intersection {
@@ -8,7 +8,7 @@ pub struct Intersection {
 impl Intersection {
     pub fn new(shape1: Box<dyn Shape>, shape2: Box<dyn Shape>) -> Intersection {
         Self {
-            shapes: [shape1, shape2]
+            shapes: [shape1, shape2],
         }
     }
 }
@@ -37,7 +37,10 @@ impl Shape for Intersection {
         let mut time_spent = 0.;
 
         loop {
-            let (date, i) = match (self.shapes[0].collision_date(ray), self.shapes[1].collision_date(ray)) {
+            let (date, i) = match (
+                self.shapes[0].collision_date(ray),
+                self.shapes[1].collision_date(ray),
+            ) {
                 (None, None) => return None,
                 (Some(date), None) => (date, 0),
                 (None, Some(date)) => (date, 1),
@@ -60,7 +63,7 @@ impl Shape for Intersection {
                     date: col.date + time_spent,
                     pos: col.pos,
                     normal: col.normal,
-                })
+                });
             }
 
             ray.move_by(date + 1e-6);

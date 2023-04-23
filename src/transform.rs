@@ -45,12 +45,12 @@ impl Transform {
         let mat = Matrix4x4::new([
             [1., 0., 0., 0.],
             [0., cos_theta, -sin_theta, 0.],
-            [0., sin_theta, cos_theta, 0.]
+            [0., sin_theta, cos_theta, 0.],
         ]);
         let mat_inv = Matrix4x4::new([
             [1., 0., 0., 0.],
             [0., cos_theta, sin_theta, 0.],
-            [0., -sin_theta, cos_theta, 0.]
+            [0., -sin_theta, cos_theta, 0.],
         ]);
         Self { mat, mat_inv }
     }
@@ -63,12 +63,12 @@ impl Transform {
         let mat = Matrix4x4::new([
             [cos_theta, 0., sin_theta, 0.],
             [0., 1., 0., 0.],
-            [-sin_theta, 0., cos_theta, 0.]
+            [-sin_theta, 0., cos_theta, 0.],
         ]);
         let mat_inv = Matrix4x4::new([
             [cos_theta, 0., -sin_theta, 0.],
             [0., 1., 0., 0.],
-            [sin_theta, 0., cos_theta, 0.]
+            [sin_theta, 0., cos_theta, 0.],
         ]);
         Self { mat, mat_inv }
     }
@@ -81,12 +81,12 @@ impl Transform {
         let mat = Matrix4x4::new([
             [cos_theta, -sin_theta, 0., 0.],
             [sin_theta, cos_theta, 0., 0.],
-            [0., 0., 1., 0.]
+            [0., 0., 1., 0.],
         ]);
         let mat_inv = Matrix4x4::new([
             [cos_theta, sin_theta, 0., 0.],
             [-sin_theta, cos_theta, 0., 0.],
-            [0., 0., 1., 0.]
+            [0., 0., 1., 0.],
         ]);
         Self { mat, mat_inv }
     }
@@ -96,7 +96,7 @@ impl Transform {
     pub fn add(&self, other: &Transform) -> Self {
         Self {
             mat: &other.mat * &self.mat,
-            mat_inv: &self.mat_inv * &other.mat_inv
+            mat_inv: &self.mat_inv * &other.mat_inv,
         }
     }
 
