@@ -13,3 +13,16 @@ pub mod shape;
 pub mod shapes;
 pub mod transform;
 pub mod vect;
+
+pub use camera::Camera;
+pub use color::Color;
+pub use light::Light;
+pub use material::Material;
+pub use matrix::Matrix4x4;
+pub use primitive::Primitive;
+pub use ray::Ray;
+pub use renderer::Renderer;
+pub use scene::Scene;
+pub use shape::Shape;
+pub use transform::Transform;
+pub use vect::Vect;
