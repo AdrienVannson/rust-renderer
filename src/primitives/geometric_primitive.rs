@@ -6,11 +6,12 @@ use crate::shape::{Collision, Shape};
 
 pub struct GeometricPrimitive {
     shape: Box<dyn Shape>,
+    material: Material,
 }
 
 impl GeometricPrimitive {
-    pub fn new(shape: Box<dyn Shape>) -> Self {
-        GeometricPrimitive { shape }
+    pub fn new(shape: Box<dyn Shape>, material: Material) -> Self {
+        GeometricPrimitive { shape, material }
     }
 }
 
@@ -24,8 +25,6 @@ impl Primitive for GeometricPrimitive {
     }
 
     fn material_at_collition(&self, _collision: Collision) -> Material {
-        Material {
-            color: Color::new(1., 1., 0.),
-        }
+        self.material
     }
 }
