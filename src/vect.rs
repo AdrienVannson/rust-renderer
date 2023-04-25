@@ -28,6 +28,11 @@ impl Vect {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
     }
 
+    /// Returns the squared norm of the vector
+    pub fn squared_norm(&self) -> f64 {
+        self.x * self.x + self.y * self.y + self.z * self.z
+    }
+
     /// Normalizes the vector
     pub fn normalize(&mut self) {
         let norm_inverse = 1. / self.norm();
