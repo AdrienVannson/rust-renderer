@@ -15,8 +15,8 @@ pub struct Camera {
     pub dir: Vect,
 
     // Dimensions of the image
-    pub width: u32,
-    pub height: u32,
+    pub width: usize,
+    pub height: usize,
 }
 
 impl Camera {
@@ -26,7 +26,7 @@ impl Camera {
         scene: &'static Scene,
         renderer: &'static (dyn Renderer),
     ) -> Vec<Vec<(u8, u8, u8)>> {
-        let mut image = Vec::<Vec<(u8, u8, u8)>>::new();
+        let mut image: Vec<Vec<(u8, u8, u8)>> = vec![vec![(0, 0, 0); self.height]; self.width];
 
         let i = Vect::new(self.dir.y, -self.dir.x, 0.).normalized();
         let j = -(self.dir ^ i).normalized();
@@ -35,14 +35,14 @@ impl Camera {
 
         // The type of a request is Option<Request>, None ends the thread
         struct Request {
-            x: u32,
-            y: u32,
+            x: usize,
+            y: usize,
         }
 
         struct Answer {
-            sender: u32,
-            x: u32,
-            y: u32,
+            sender: usize,
+            x: usize,
+            y: usize,
             color: Color,
         }
 
@@ -100,8 +100,6 @@ impl Camera {
         assert!(workers_count <= height);
 
         for x in 0..self.width {
-            let mut column = Vec::new();
-
             for y in 0..self.height {
                 tx_workers[0].send(Some(Request { x, y })).unwrap();
 
@@ -114,10 +112,8 @@ impl Camera {
                     (255. * answer.color.blue) as u8,
                 );
 
-                column.push(pixel);
+                image[x][y] = pixel;
             }
-
-            image.push(column);
         }
 
         // End the workers
