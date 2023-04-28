@@ -13,7 +13,7 @@ pub struct Scene {
 
 impl Scene {
     /// Creates a new scene
-    pub fn new(camera: Camera) -> Self {
+    pub const fn new(camera: Camera) -> Self {
         Scene {
             camera,
             lights: Vec::new(),
@@ -32,7 +32,7 @@ impl Scene {
     }
 
     /// Renders the scene
-    pub fn render(&self, renderer: &dyn Renderer) -> Vec<Vec<(u8, u8, u8)>> {
+    pub fn render(&'static self, renderer: &'static dyn Renderer) -> Vec<Vec<(u8, u8, u8)>> {
         self.camera.render(self, renderer)
     }
 

@@ -1,7 +1,7 @@
 use crate::ray::Ray;
 use crate::vect::Vect;
 
-pub trait Shape {
+pub trait Shape: Send + Sync {
     /// Returns the date at which a ray will collide with the object. The ray
     /// may start inside the object.
     fn collision_date(&self, ray: Ray) -> Option<f64>;

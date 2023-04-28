@@ -4,7 +4,7 @@ use crate::{
     vect::Vect,
 };
 
-pub trait ImplicitShape {
+pub trait ImplicitShape: Send + Sync {
     /// Returns a minoration of the distance between a point and the object.
     /// If the object has an inside, the value is negative for points inside
     /// the object.
