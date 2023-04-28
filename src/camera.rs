@@ -61,7 +61,7 @@ impl Camera {
         let mut tx_workers = Vec::new();
         let mut handles = Vec::new();
 
-        let workers_count = 1;
+        let workers_count = 4;
 
         for worker_id in 0..workers_count {
             let renderer = Arc::clone(&renderer);
@@ -101,19 +101,40 @@ impl Camera {
 
         for x in 0..self.width {
             for y in 0..self.height {
-                tx_workers[0].send(Some(Request { x, y })).unwrap();
+                let worker_id = if x == 0 && y < workers_count {
+                    y
+                } else {
+                    let answer = rx_main.recv().unwrap();
+                    let (x, y) = (answer.x, answer.y);
 
-                let answer = rx_main.recv().unwrap();
+                    // Compute the pixel
+                    let pixel = (
+                        (255. * answer.color.red) as u8,
+                        (255. * answer.color.green) as u8,
+                        (255. * answer.color.blue) as u8,
+                    );
 
-                // Compute the pixel
-                let pixel = (
-                    (255. * answer.color.red) as u8,
-                    (255. * answer.color.green) as u8,
-                    (255. * answer.color.blue) as u8,
-                );
+                    image[x][y] = pixel;
 
-                image[x][y] = pixel;
+                    answer.sender
+                };
+
+                tx_workers[worker_id].send(Some(Request { x, y })).unwrap();
             }
+        }
+
+        for _ in 0..workers_count {
+            let answer = rx_main.recv().unwrap();
+            let (x, y) = (answer.x, answer.y);
+
+            // Compute the pixel
+            let pixel = (
+                (255. * answer.color.red) as u8,
+                (255. * answer.color.green) as u8,
+                (255. * answer.color.blue) as u8,
+            );
+
+            image[x][y] = pixel;
         }
 
         // End the workers
