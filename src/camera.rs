@@ -1,6 +1,8 @@
 use std::cmp::min;
-use std::sync::{Arc, Mutex};
-use std::{sync::mpsc, thread};
+use std::{
+    sync::{mpsc, Arc},
+    thread,
+};
 
 use crate::{Color, Ray, Renderer, Scene, Vect};
 
@@ -31,45 +33,16 @@ impl Camera {
 
         assert!(j.z >= 0.);
 
-        /*for x in 0..self.width {
-            let mut column = Vec::new();
-
-            for y in 0..self.height {
-                let ratio = min(self.width, self.height) as f64;
-
-                // Compute the ray
-                let dir = self.dir
-                    + ((x as f64) - 0.5 * (self.width as f64)) / ratio * i
-                    + ((y as f64) - 0.5 * (self.height as f64)) / ratio * j;
-
-                let ray = Ray::new(self.pos, dir);
-
-                // Get the color
-                //let color = scene.color(ray, 3);
-                let color = renderer.color(ray, scene);
-
-                // Compute the pixel
-                let pixel = (
-                    (255. * color.red) as u8,
-                    (255. * color.green) as u8,
-                    (255. * color.blue) as u8,
-                );
-
-                column.push(pixel);
-            }
-
-            image.push(column);
-        }*/
-
+        // The type of a request is Option<Request>, None ends the thread
         struct Request {
-            x: usize,
-            y: usize,
+            x: u32,
+            y: u32,
         }
 
         struct Answer {
-            sender: usize,
-            x: usize,
-            y: usize,
+            sender: u32,
+            x: u32,
+            y: u32,
             color: Color,
         }
 
@@ -85,51 +58,75 @@ impl Camera {
         let renderer = Arc::new(renderer);
         let scene = Arc::new(scene);
 
-        {
+        let mut tx_workers = Vec::new();
+        let mut handles = Vec::new();
+
+        let workers_count = 1;
+
+        for worker_id in 0..workers_count {
             let renderer = Arc::clone(&renderer);
             let scene = Arc::clone(&scene);
-            let (tx_worker, rx_worker) = mpsc::channel::<Request>();
+            let (tx_worker, rx_worker) = mpsc::channel::<Option<Request>>();
+            tx_workers.push(tx_worker);
+            let tx_main = tx_main.clone();
 
-            let handle = thread::spawn(move || {
-                let request = rx_worker.recv().unwrap();
+            handles.push(thread::spawn(move || {
+                while let Some(request) = rx_worker.recv().unwrap() {
+                    let (x, y) = (request.x, request.y);
 
-                let (x, y) = (request.x, request.y);
+                    // Compute the ray
+                    let dir = dir
+                        + ((x as f64) - 0.5 * (width as f64)) / ratio * i
+                        + ((y as f64) - 0.5 * (height as f64)) / ratio * j;
 
-                // Compute the ray
-                let dir = dir
-                    + ((x as f64) - 0.5 * (width as f64)) / ratio * i
-                    + ((y as f64) - 0.5 * (height as f64)) / ratio * j;
+                    let ray = Ray::new(pos, dir);
 
-                let ray = Ray::new(pos, dir);
+                    // Get the color
+                    let color = renderer.color(ray, &scene);
 
-                // Get the color
-                renderer.color(ray, &scene);
-            });
-
-            handle.join().unwrap();
+                    tx_main
+                        .send(Answer {
+                            sender: worker_id,
+                            x,
+                            y,
+                            color,
+                        })
+                        .unwrap();
+                }
+            }));
         }
 
-        {
-            let renderer = Arc::clone(&renderer);
-            let scene = Arc::clone(&scene);
-            let (tx_worker, rx_worker) = mpsc::channel::<Request>();
+        // Not a real constraint and simplifies a bit the implementation
+        assert!(workers_count <= height);
 
-            let handle = thread::spawn(move || {
-                let request = rx_worker.recv().unwrap();
+        for x in 0..self.width {
+            let mut column = Vec::new();
 
-                let (x, y) = (request.x, request.y);
+            for y in 0..self.height {
+                tx_workers[0].send(Some(Request { x, y })).unwrap();
 
-                // Compute the ray
-                let dir = dir
-                    + ((x as f64) - 0.5 * (width as f64)) / ratio * i
-                    + ((y as f64) - 0.5 * (height as f64)) / ratio * j;
+                let answer = rx_main.recv().unwrap();
 
-                let ray = Ray::new(pos, dir);
+                // Compute the pixel
+                let pixel = (
+                    (255. * answer.color.red) as u8,
+                    (255. * answer.color.green) as u8,
+                    (255. * answer.color.blue) as u8,
+                );
 
-                // Get the color
-                renderer.color(ray, &scene);
-            });
+                column.push(pixel);
+            }
 
+            image.push(column);
+        }
+
+        // End the workers
+        for tx in tx_workers {
+            tx.send(None).unwrap();
+        }
+
+        // End for the treads to finish
+        for handle in handles {
             handle.join().unwrap();
         }
 
