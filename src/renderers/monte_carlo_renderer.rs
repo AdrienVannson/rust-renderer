@@ -177,28 +177,48 @@ impl Renderer for MonteCarloRenderer {
 
         let mut image = Image::new(scene.camera.width, scene.camera.height);
 
-        for x in 0..width {
-            for y in 0..height {
-                let worker_id = if x == 0 && y < workers_count {
-                    y
-                } else {
-                    let answer = rx_main.recv().unwrap();
-                    let (x, y) = (answer.x, answer.y);
+        for it in 0..1000 {
+            println!("Iteration {}...", it);
 
-                    image.set_pixel(x, y, answer.color);
+            for x in 0..width {
+                for y in 0..height {
+                    let worker_id = if x == 0 && y < workers_count {
+                        y
+                    } else {
+                        let answer = rx_main.recv().unwrap();
+                        let (x, y) = (answer.x, answer.y);
 
-                    answer.sender
-                };
+                        let prev_color = image.pixel(x, y);
 
-                tx_workers[worker_id].send(Some(Request { x, y })).unwrap();
+                        let it = it as f64;
+                        image.set_pixel(x, y, Color::new(
+                            (it * prev_color.red + answer.color.red) / (it + 1.),
+                            (it * prev_color.green + answer.color.green) / (it + 1.),
+                            (it * prev_color.blue + answer.color.blue) / (it + 1.),
+                        ));
+
+                        answer.sender
+                    };
+
+                    tx_workers[worker_id].send(Some(Request { x, y })).unwrap();
+                }
             }
-        }
 
-        for _ in 0..workers_count {
-            let answer = rx_main.recv().unwrap();
+            for _ in 0..workers_count {
+                let answer = rx_main.recv().unwrap();
+                let (x, y) = (answer.x, answer.y);
 
-            // Compute the pixel
-            image.set_pixel(answer.x, answer.y, answer.color);
+                let prev_color = image.pixel(x, y);
+
+                let it = it as f64;
+                image.set_pixel(x, y, Color::new(
+                    (it * prev_color.red + answer.color.red) / (it + 1.),
+                    (it * prev_color.green + answer.color.green) / (it + 1.),
+                    (it * prev_color.blue + answer.color.blue) / (it + 1.),
+                ));
+            }
+
+            image.export(&format!("output-{:0>4}.png", it));
         }
 
         // End the workers
