@@ -19,7 +19,7 @@ impl NoLightRenderer {
 }
 
 impl Renderer for NoLightRenderer {
-    fn render(&self, scene: Scene) -> Vec<Vec<(u8, u8, u8)>> {
+    fn render(&self, scene: Scene) {
         let mut image: Vec<Vec<(u8, u8, u8)>> =
             vec![vec![(0, 0, 0); scene.camera.height]; scene.camera.width];
 
@@ -35,6 +35,6 @@ impl Renderer for NoLightRenderer {
             }
         }
 
-        image
+        //image
     }
 }

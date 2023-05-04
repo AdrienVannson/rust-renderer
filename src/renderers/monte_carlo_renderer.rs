@@ -1,4 +1,4 @@
-use crate::{Color, Ray, Renderer, Scene, Vect};
+use crate::{Color, Image, Ray, Renderer, Scene, Vect};
 use rand::Rng;
 use std::{
     sync::{mpsc, Arc},
@@ -100,8 +100,6 @@ fn one_color(ray: Ray, scene: &Scene) -> Color {
 }
 
 fn color(iterations: u32, ray: Ray, scene: &Scene) -> Color {
-    //self.one_color(ray, scene)
-
     let mut sum = (0., 0., 0.);
 
     for _ in 0..iterations {
@@ -117,15 +115,12 @@ fn color(iterations: u32, ray: Ray, scene: &Scene) -> Color {
 }
 
 impl Renderer for MonteCarloRenderer {
-    fn render(&self, scene: Scene) -> Vec<Vec<(u8, u8, u8)>> {
+    fn render(&self, scene: Scene) {
         let scene = Arc::new(scene);
 
         let width = scene.camera.width;
         let height = scene.camera.height;
         let iterations_per_pixel = self.iterations_per_pixel;
-
-        let mut image: Vec<Vec<(u8, u8, u8)>> =
-            vec![vec![(0, 0, 0); scene.camera.height]; scene.camera.width];
 
         // The type of a request is Option<Request>, None ends the thread
         struct Request {
@@ -180,6 +175,8 @@ impl Renderer for MonteCarloRenderer {
         // Not a real constraint and simplifies a bit the implementation
         assert!(workers_count <= height);
 
+        let mut image = Image::new(scene.camera.width, scene.camera.height);
+
         for x in 0..width {
             for y in 0..height {
                 let worker_id = if x == 0 && y < workers_count {
@@ -188,14 +185,7 @@ impl Renderer for MonteCarloRenderer {
                     let answer = rx_main.recv().unwrap();
                     let (x, y) = (answer.x, answer.y);
 
-                    // Compute the pixel
-                    let pixel = (
-                        (255. * answer.color.red) as u8,
-                        (255. * answer.color.green) as u8,
-                        (255. * answer.color.blue) as u8,
-                    );
-
-                    image[x][y] = pixel;
+                    image.set_pixel(x, y, answer.color);
 
                     answer.sender
                 };
@@ -206,16 +196,9 @@ impl Renderer for MonteCarloRenderer {
 
         for _ in 0..workers_count {
             let answer = rx_main.recv().unwrap();
-            let (x, y) = (answer.x, answer.y);
 
             // Compute the pixel
-            let pixel = (
-                (255. * answer.color.red) as u8,
-                (255. * answer.color.green) as u8,
-                (255. * answer.color.blue) as u8,
-            );
-
-            image[x][y] = pixel;
+            image.set_pixel(answer.x, answer.y, answer.color);
         }
 
         // End the workers
@@ -228,6 +211,6 @@ impl Renderer for MonteCarloRenderer {
             handle.join().unwrap();
         }
 
-        image
+        image.export("output.png");
     }
 }

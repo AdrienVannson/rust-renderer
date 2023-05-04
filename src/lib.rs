@@ -1,5 +1,6 @@
 pub mod camera;
 pub mod color;
+pub mod image;
 pub mod light;
 pub mod material;
 pub mod matrix;
@@ -14,6 +15,7 @@ pub mod shapes;
 pub mod transform;
 pub mod vect;
 
+pub use crate::image::Image;
 pub use camera::Camera;
 pub use color::Color;
 pub use light::Light;

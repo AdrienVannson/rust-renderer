@@ -42,7 +42,7 @@ fn color(ray: Ray, scene: &Arc<Scene>) -> Color {
 }
 
 impl Renderer for WhittedRayTracer {
-    fn render(&self, scene: Scene) -> Vec<Vec<(u8, u8, u8)>> {
+    fn render(&self, scene: Scene) {
         let scene = Arc::new(scene);
 
         let width = scene.camera.width;
@@ -152,6 +152,6 @@ impl Renderer for WhittedRayTracer {
             handle.join().unwrap();
         }
 
-        image
+        //image
     }
 }
