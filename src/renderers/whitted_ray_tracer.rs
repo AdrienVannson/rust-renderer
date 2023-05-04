@@ -1,6 +1,7 @@
 use std::{
     sync::{mpsc, Arc},
     thread,
+    thread::available_parallelism,
 };
 
 use crate::{Color, Ray, Renderer, Scene};
@@ -70,7 +71,7 @@ impl Renderer for WhittedRayTracer {
         let mut tx_workers = Vec::new();
         let mut handles = Vec::new();
 
-        let workers_count = 4;
+        let workers_count = available_parallelism().unwrap().get();
 
         for worker_id in 0..workers_count {
             let scene = Arc::clone(&scene);
