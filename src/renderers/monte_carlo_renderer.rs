@@ -1,9 +1,9 @@
+use crate::{Color, Ray, Renderer, Scene, Vect};
+use rand::Rng;
 use std::{
     sync::{mpsc, Arc},
     thread,
 };
-use rand::Rng;
-use crate::{Color, Ray, Renderer, Scene, Vect};
 
 pub struct MonteCarloRenderer {
     pub iterations_per_pixel: u32,
@@ -231,4 +231,3 @@ impl Renderer for MonteCarloRenderer {
         image
     }
 }
-

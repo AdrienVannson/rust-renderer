@@ -22,7 +22,7 @@ impl Renderer for NoLightRenderer {
     fn render(&self, scene: Scene) -> Vec<Vec<(u8, u8, u8)>> {
         let mut image: Vec<Vec<(u8, u8, u8)>> =
             vec![vec![(0, 0, 0); scene.camera.height]; scene.camera.width];
-        
+
         for x in 0..scene.camera.width {
             for y in 0..scene.camera.height {
                 let color = self.color(scene.camera.generate_ray(x, y), &scene);
