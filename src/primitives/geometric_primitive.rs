@@ -1,8 +1,4 @@
-use crate::color::Color;
-use crate::material::Material;
-use crate::primitive::Primitive;
-use crate::ray::Ray;
-use crate::shape::{Collision, Shape};
+use crate::{Collision, Material, Primitive, Ray, Shape};
 
 pub struct GeometricPrimitive {
     shape: Box<dyn Shape>,
