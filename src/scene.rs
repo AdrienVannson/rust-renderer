@@ -31,11 +31,6 @@ impl Scene {
         self.primitives.push(prim);
     }
 
-    /// Renders the scene
-    pub fn render(&'static self, renderer: &'static dyn Renderer) -> Vec<Vec<(u8, u8, u8)>> {
-        self.camera.render(self, renderer)
-    }
-
     /// Returns the time until a ray touches an object of the scene
     pub fn collision_date(&self, ray: Ray) -> f64 {
         let mut earliest_collision = f64::INFINITY;

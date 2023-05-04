@@ -1,7 +1,6 @@
-use crate::color::Color;
-use crate::ray::Ray;
-use crate::scene::Scene;
+use crate::Scene;
 
-pub trait Renderer: Send + Sync {
-    fn color(&self, ray: Ray, scene: &Scene) -> Color;
+pub trait Renderer {
+    /// Renders the scene
+    fn render(&self, scene: &Scene) -> Vec<Vec<(u8, u8, u8)>>;
 }

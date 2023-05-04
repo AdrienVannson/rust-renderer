@@ -1,6 +1,6 @@
 use crate::{Color, Ray, Renderer, Scene, Vect};
 use rand::Rng;
-
+/*
 pub struct MonteCarloRenderer {
     pub iterations_per_pixel: i32,
 }
@@ -115,3 +115,4 @@ impl Renderer for MonteCarloRenderer {
         Color::new(f * sum.0, f * sum.1, f * sum.2)
     }
 }
+*/
