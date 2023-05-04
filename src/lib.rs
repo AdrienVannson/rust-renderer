@@ -23,6 +23,6 @@ pub use primitive::Primitive;
 pub use ray::Ray;
 pub use renderer::Renderer;
 pub use scene::Scene;
-pub use shape::Shape;
+pub use shape::{Collision, Shape};
 pub use transform::Transform;
 pub use vect::Vect;

@@ -1,9 +1,4 @@
-use crate::camera::Camera;
-use crate::light::Light;
-use crate::primitive::Primitive;
-use crate::ray::Ray;
-use crate::renderer::Renderer;
-use crate::shape::Collision;
+use crate::{Camera, Collision, Light, Primitive, Ray};
 
 pub struct Scene {
     pub camera: Camera,
