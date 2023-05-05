@@ -4,7 +4,7 @@ use std::{
     thread::available_parallelism,
 };
 
-use crate::{Color, Ray, Renderer, Scene};
+use crate::{Color, Ray, Renderer, Scene, Image};
 
 pub struct WhittedRayTracer {}
 
@@ -48,8 +48,7 @@ impl Renderer for WhittedRayTracer {
         let width = scene.camera.width;
         let height = scene.camera.height;
 
-        let mut image: Vec<Vec<(u8, u8, u8)>> =
-            vec![vec![(0, 0, 0); scene.camera.height]; scene.camera.width];
+        let mut image = Image::new(width, height);
 
         // The type of a request is Option<Request>, None ends the thread
         struct Request {
@@ -112,14 +111,7 @@ impl Renderer for WhittedRayTracer {
                     let answer = rx_main.recv().unwrap();
                     let (x, y) = (answer.x, answer.y);
 
-                    // Compute the pixel
-                    let pixel = (
-                        (255. * answer.color.red) as u8,
-                        (255. * answer.color.green) as u8,
-                        (255. * answer.color.blue) as u8,
-                    );
-
-                    image[x][y] = pixel;
+                    image.set_pixel(x, y, answer.color);
 
                     answer.sender
                 };
@@ -132,14 +124,7 @@ impl Renderer for WhittedRayTracer {
             let answer = rx_main.recv().unwrap();
             let (x, y) = (answer.x, answer.y);
 
-            // Compute the pixel
-            let pixel = (
-                (255. * answer.color.red) as u8,
-                (255. * answer.color.green) as u8,
-                (255. * answer.color.blue) as u8,
-            );
-
-            image[x][y] = pixel;
+            image.set_pixel(x, y, answer.color);
         }
 
         // End the workers
@@ -152,6 +137,6 @@ impl Renderer for WhittedRayTracer {
             handle.join().unwrap();
         }
 
-        //image
+        image.export("output.png");
     }
 }
