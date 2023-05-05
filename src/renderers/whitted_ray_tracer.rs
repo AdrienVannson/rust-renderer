@@ -4,7 +4,7 @@ use std::{
     thread::available_parallelism,
 };
 
-use crate::{Color, Ray, Renderer, Scene, Image};
+use crate::{Color, Image, Ray, Renderer, Scene};
 
 pub struct WhittedRayTracer {}
 

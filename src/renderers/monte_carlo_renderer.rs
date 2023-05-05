@@ -191,11 +191,15 @@ impl Renderer for MonteCarloRenderer {
                         let prev_color = image.pixel(x, y);
 
                         let it = it as f64;
-                        image.set_pixel(x, y, Color::new(
-                            (it * prev_color.red + answer.color.red) / (it + 1.),
-                            (it * prev_color.green + answer.color.green) / (it + 1.),
-                            (it * prev_color.blue + answer.color.blue) / (it + 1.),
-                        ));
+                        image.set_pixel(
+                            x,
+                            y,
+                            Color::new(
+                                (it * prev_color.red + answer.color.red) / (it + 1.),
+                                (it * prev_color.green + answer.color.green) / (it + 1.),
+                                (it * prev_color.blue + answer.color.blue) / (it + 1.),
+                            ),
+                        );
 
                         answer.sender
                     };
@@ -211,15 +215,25 @@ impl Renderer for MonteCarloRenderer {
                 let prev_color = image.pixel(x, y);
 
                 let it = it as f64;
-                image.set_pixel(x, y, Color::new(
-                    (it * prev_color.red + answer.color.red) / (it + 1.),
-                    (it * prev_color.green + answer.color.green) / (it + 1.),
-                    (it * prev_color.blue + answer.color.blue) / (it + 1.),
-                ));
+                image.set_pixel(
+                    x,
+                    y,
+                    Color::new(
+                        (it * prev_color.red + answer.color.red) / (it + 1.),
+                        (it * prev_color.green + answer.color.green) / (it + 1.),
+                        (it * prev_color.blue + answer.color.blue) / (it + 1.),
+                    ),
+                );
             }
 
-            image.export(&format!("output-{:0>4}.png", self.iterations_per_pixel * it));
-            image.raw_export(&format!("raw-output-{:0>4}", self.iterations_per_pixel * it));
+            image.export(&format!(
+                "output-{:0>4}.png",
+                self.iterations_per_pixel * it
+            ));
+            image.raw_export(&format!(
+                "raw-output-{:0>4}",
+                self.iterations_per_pixel * it
+            ));
         }
 
         // End the workers
