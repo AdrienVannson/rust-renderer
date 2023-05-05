@@ -1,5 +1,5 @@
 use crate::Color;
-use std::fs::create_dir_all;
+use std::{fs::{create_dir_all, File}, io::Write};
 
 pub struct Image {
     pixels: Vec<Vec<Color>>,
@@ -56,5 +56,22 @@ impl Image {
         output
             .save("output/".to_owned() + filename)
             .expect("Could not save the image");
+    }
+
+    pub fn raw_export(&self, filename: &str) {
+        let mut file = File::create("output/".to_owned() + filename).unwrap();
+
+        for x in 0..self.width() {
+            for y in 0..self.height() {
+                let color = self.pixels[x][y];
+
+                file.write_all(color.red.to_string().as_bytes()).unwrap();
+                file.write_all(b" ").unwrap();
+                file.write_all(color.green.to_string().as_bytes()).unwrap();
+                file.write_all(b" ").unwrap();
+                file.write_all(color.blue.to_string().as_bytes()).unwrap();
+                file.write_all(b"\n").unwrap();
+            }
+        }
     }
 }

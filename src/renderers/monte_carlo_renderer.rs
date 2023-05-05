@@ -218,7 +218,8 @@ impl Renderer for MonteCarloRenderer {
                 ));
             }
 
-            image.export(&format!("output-{:0>4}.png", it));
+            image.export(&format!("output-{:0>4}.png", self.iterations_per_pixel * it));
+            image.raw_export(&format!("raw-output-{:0>4}", self.iterations_per_pixel * it));
         }
 
         // End the workers
