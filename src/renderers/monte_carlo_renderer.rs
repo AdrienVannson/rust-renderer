@@ -1,37 +1,81 @@
 use crate::{Color, Image, Ray, Renderer, Scene, Vect};
-use rand::Rng;
+use rand::{Rng, thread_rng};
 use std::{
+    f64::consts::PI,
     sync::{mpsc, Arc},
     thread,
 };
 
+#[derive(Copy, Clone, Debug)]
+pub enum SamplingMethod {
+    IndependantSamples,
+    RegularGrid,
+}
+
 pub struct MonteCarloRenderer {
     pub iterations_per_pixel: u32,
+    pub sampling_method: SamplingMethod,
 }
 
-fn random_vector_in_half_space(dir: Vect) -> Vect {
-    let mut rng = rand::thread_rng();
+// u1 and u2 must be random variables uniformly generated in [0, 1].
+fn random_vector_in_half_space(dir: Vect, u1: f64, u2: f64) -> Vect {
+    let theta = 2.0 * PI * u1;
+    let phi = (2.0 * u2 - 1.0).acos();
 
-    let mut vect = Vect::new(
-        2. * rng.gen::<f64>() - 1.,
-        2. * rng.gen::<f64>() - 1.,
-        2. * rng.gen::<f64>() - 1.,
-    );
+    let x = phi.sin() * theta.cos();
+    let y = phi.sin() * theta.sin();
+    let z = phi.cos();
 
-    if vect.squared_norm() > 1. {
-        return random_vector_in_half_space(dir);
-    }
-
-    vect.normalize();
+    let vect = Vect::new(x, y, z);
 
     if vect * dir < 0. {
-        vect = -vect;
+        -vect
+    } else {
+        vect
     }
-
-    vect
 }
 
-fn one_color(ray: Ray, scene: &Scene) -> Color {
+fn generate_samples_regular_grid(samples_count: u32) -> Vec<(f64, f64)> {
+    let root = (samples_count as f64).sqrt() as u32;
+    assert_eq!(root * root, samples_count);
+
+    let mut samples = Vec::new();
+
+    for i in 0..root {
+        for j in 0..root {
+            samples.push((
+                // Not 0.5 to prevent rays from being parallel to the walls
+                (i as f64 + 0.505) / root as f64,
+                ((j as f64 + 0.505) / root as f64),
+            ));
+        }
+    }
+
+    samples
+}
+
+fn generate_samples_uniform_jitter(samples_count: u32) -> Vec<(f64, f64)> {
+    let root = (samples_count as f64).sqrt() as u32;
+    assert_eq!(root * root, samples_count);
+
+    let mut samples = Vec::new();
+
+    let jitter_x = thread_rng().gen::<f64>() - 0.5;
+    let jitter_y = thread_rng().gen::<f64>() - 0.5;
+
+    for i in 0..root {
+        for j in 0..root {
+            samples.push((
+                (i as f64 + 0.5 + jitter_x) / root as f64,
+                (j as f64 + 0.5 + jitter_y) / root as f64,
+            ));
+        }
+    }
+
+    samples
+}
+
+fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
     if let Some((primitive, collision)) = scene.collision(ray) {
         let material = primitive.material_at_collition(collision);
 
@@ -67,7 +111,7 @@ fn one_color(ray: Ray, scene: &Scene) -> Color {
             blue: intensity * material.color.blue,
         }*/
 
-        let next_dir = random_vector_in_half_space(collision.normal);
+        let next_dir = random_vector_in_half_space(collision.normal, sample.0, sample.1);
         let mut next_ray = Ray {
             pos: collision.pos,
             dir: next_dir,
@@ -99,18 +143,18 @@ fn one_color(ray: Ray, scene: &Scene) -> Color {
     }
 }
 
-fn color(iterations: u32, ray: Ray, scene: &Scene) -> Color {
+fn color(ray: Ray, scene: &Scene, samples: &Vec<(f64, f64)>) -> Color {
     let mut sum = (0., 0., 0.);
 
-    for _ in 0..iterations {
-        let color = one_color(ray, scene);
+    for sample in samples {
+        let color = one_color(ray, scene, *sample);
 
         sum.0 += color.red;
         sum.1 += color.green;
         sum.2 += color.blue;
     }
 
-    let f = 1. / iterations as f64;
+    let f = 1. / samples.len() as f64;
     Color::new(f * sum.0, f * sum.1, f * sum.2)
 }
 
@@ -158,7 +202,11 @@ impl Renderer for MonteCarloRenderer {
                     let ray = scene.camera.generate_ray(x, y);
 
                     // Get the color
-                    let color = color(iterations_per_pixel, ray, &scene);
+                    let color = color(
+                        ray,
+                        &scene,
+                        &generate_samples_uniform_jitter(iterations_per_pixel),
+                    );
 
                     tx_main
                         .send(Answer {
@@ -177,7 +225,8 @@ impl Renderer for MonteCarloRenderer {
 
         let mut image = Image::new(scene.camera.width, scene.camera.height);
 
-        for it in 0..1000 {
+        //for it in 0..1000 {
+        for it in 0..1 {
             println!("Iteration {}...", it);
 
             for x in 0..width {
@@ -228,11 +277,11 @@ impl Renderer for MonteCarloRenderer {
 
             image.export(&format!(
                 "output-{:0>4}.png",
-                self.iterations_per_pixel * it
+                self.iterations_per_pixel * (it + 1)
             ));
             image.raw_export(&format!(
                 "raw-output-{:0>4}",
-                self.iterations_per_pixel * it
+                self.iterations_per_pixel * (it + 1)
             ));
         }
 
