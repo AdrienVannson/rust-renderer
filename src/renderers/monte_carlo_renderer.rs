@@ -1,5 +1,5 @@
 use crate::{Color, Image, Ray, Renderer, Scene, Vect};
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 use std::{
     f64::consts::PI,
     sync::{mpsc, Arc},
