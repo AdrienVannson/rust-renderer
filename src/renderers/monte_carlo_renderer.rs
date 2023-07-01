@@ -194,6 +194,8 @@ impl Renderer for MonteCarloRenderer {
             tx_workers.push(tx_worker);
             let tx_main = tx_main.clone();
 
+            let sampling_method = self.sampling_method;
+
             handles.push(thread::spawn(move || {
                 while let Some(request) = rx_worker.recv().unwrap() {
                     let (x, y) = (request.x, request.y);
@@ -205,7 +207,14 @@ impl Renderer for MonteCarloRenderer {
                     let color = color(
                         ray,
                         &scene,
-                        &generate_samples_uniform_jitter(iterations_per_pixel),
+                        &match sampling_method {
+                            SamplingMethod::IndependantSamples => {
+                                generate_samples_uniform_jitter(iterations_per_pixel)
+                            }
+                            SamplingMethod::RegularGrid => {
+                                generate_samples_regular_grid(iterations_per_pixel)
+                            }
+                        },
                     );
 
                     tx_main
