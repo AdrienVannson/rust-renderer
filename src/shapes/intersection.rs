@@ -6,10 +6,10 @@ pub struct Intersection {
 }
 
 impl Intersection {
-    pub fn new(shape1: Box<dyn Shape>, shape2: Box<dyn Shape>) -> Intersection {
-        Self {
+    pub fn new(shape1: Box<dyn Shape>, shape2: Box<dyn Shape>) -> Box<Intersection> {
+        Box::new(Self {
             shapes: [shape1, shape2],
-        }
+        })
     }
 }
 

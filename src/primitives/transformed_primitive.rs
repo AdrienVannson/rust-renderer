@@ -9,11 +9,11 @@ pub struct TransformedPrimitive {
 }
 
 impl TransformedPrimitive {
-    pub fn new(primitive: Box<dyn Primitive>, object_to_world: Transform) -> Self {
-        TransformedPrimitive {
+    pub fn new(primitive: Box<dyn Primitive>, object_to_world: Transform) -> Box<Self> {
+        Box::new(TransformedPrimitive {
             primitive,
             object_to_world,
-        }
+        })
     }
 }
 

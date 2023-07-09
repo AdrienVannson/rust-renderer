@@ -6,8 +6,8 @@ pub struct GeometricPrimitive {
 }
 
 impl GeometricPrimitive {
-    pub fn new(shape: Box<dyn Shape>, material: Material) -> Self {
-        GeometricPrimitive { shape, material }
+    pub fn new(shape: Box<dyn Shape>, material: Material) -> Box<Self> {
+        Box::new(GeometricPrimitive { shape, material })
     }
 }
 

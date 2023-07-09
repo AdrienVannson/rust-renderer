@@ -8,8 +8,8 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn new(center: Vect, radius: f64) -> Self {
-        Self { center, radius }
+    pub fn new(center: Vect, radius: f64) -> Box<Self> {
+        Box::new(Self { center, radius })
     }
 }
 

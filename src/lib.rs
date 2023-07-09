@@ -16,6 +16,7 @@ pub mod transform;
 pub mod vect;
 
 pub use crate::image::Image;
+pub use crate::renderer::Renderer;
 pub use camera::Camera;
 pub use color::Color;
 pub use light::Light;
@@ -23,7 +24,6 @@ pub use material::Material;
 pub use matrix::Matrix4x4;
 pub use primitive::Primitive;
 pub use ray::Ray;
-pub use crate::renderer::Renderer;
 pub use scene::Scene;
 pub use shape::{Collision, Shape};
 pub use transform::Transform;

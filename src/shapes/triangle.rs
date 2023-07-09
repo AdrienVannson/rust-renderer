@@ -9,8 +9,8 @@ pub struct Triangle {
 }
 
 impl Triangle {
-    pub fn new(a: Vect, b: Vect, c: Vect) -> Self {
-        Self { a, b, c }
+    pub fn new(a: Vect, b: Vect, c: Vect) -> Box<Self> {
+        Box::new(Self { a, b, c })
     }
 }
 

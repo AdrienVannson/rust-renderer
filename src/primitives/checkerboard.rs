@@ -25,15 +25,15 @@ impl Checkerboard {
         columns_count: i32,
         color1: Color,
         color2: Color,
-    ) -> Self {
-        Checkerboard {
+    ) -> Box<Self> {
+        Box::new(Checkerboard {
             origin,
             width,
             height,
             lines_count,
             columns_count,
             colors: [color1, color2],
-        }
+        })
     }
 }
 
