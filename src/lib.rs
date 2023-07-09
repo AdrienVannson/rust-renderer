@@ -23,7 +23,7 @@ pub use material::Material;
 pub use matrix::Matrix4x4;
 pub use primitive::Primitive;
 pub use ray::Ray;
-pub use renderer::Renderer;
+pub use crate::renderer::Renderer;
 pub use scene::Scene;
 pub use shape::{Collision, Shape};
 pub use transform::Transform;
