@@ -1,5 +1,4 @@
 use std::{
-    collections::HashMap,
     fs::File,
     io::{BufRead, BufReader},
 };
@@ -9,11 +8,13 @@ use crate::{
     Shape, Vect,
 };
 
-pub fn load_obj(filename: &str) -> HashMap<String, Box<dyn Shape>> {
-    let mut objects: HashMap<String, Box<dyn Shape>> = HashMap::new();
+pub fn load_obj(filename: &str) -> Vec<(String, Box<dyn Shape>)> {
+    let mut objects: Vec<(String, Box<dyn Shape>)> = Vec::new();
 
     let mut vertices = Vec::new();
-    let mut shape = CompoundShape::new();
+
+    let mut name = String::new();
+    let mut shape: Option<Box<CompoundShape>> = None;
 
     for line in BufReader::new(File::open(filename).unwrap()).lines() {
         let line = line.unwrap();
@@ -23,7 +24,14 @@ pub fn load_obj(filename: &str) -> HashMap<String, Box<dyn Shape>> {
             continue;
         }
 
-        if tokens[0] == "v" {
+        if tokens[0] == "o" {
+            if let Some(shape) = shape.take() {
+                objects.push((name, shape));
+            }
+            shape = Some(CompoundShape::new());
+
+            name = tokens[1].into();
+        } else if tokens[0] == "v" {
             // Vertex
             let v = Vect::new(
                 tokens[1].parse().unwrap(),
@@ -42,11 +50,11 @@ pub fn load_obj(filename: &str) -> HashMap<String, Box<dyn Shape>> {
                 vertices[get_index(tokens[3])],
             );
 
-            shape.add(triangle);
+            shape.as_mut().unwrap().add(triangle);
         }
     }
 
-    objects.insert("Shape".into(), shape);
+    objects.push((name, shape.unwrap()));
 
     objects
 }
