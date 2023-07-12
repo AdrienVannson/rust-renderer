@@ -1,5 +1,6 @@
 use crate::{Collision, Material, Primitive, Ray, Shape};
 
+#[derive(Clone, Debug)]
 pub struct GeometricPrimitive {
     shape: Box<dyn Shape>,
     material: Material,

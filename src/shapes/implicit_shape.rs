@@ -1,10 +1,12 @@
+use std::fmt::Debug;
+
 use crate::{
     ray::Ray,
     shape::{Collision, Shape},
     vect::Vect,
 };
 
-pub trait ImplicitShape: Send + Sync {
+pub trait ImplicitShape: Send + Sync + Debug {
     /// Returns a minoration of the distance between a point and the object.
     /// If the object has an inside, the value is negative for points inside
     /// the object.
@@ -14,7 +16,7 @@ pub trait ImplicitShape: Send + Sync {
     fn grad(&self, point: Vect) -> Vect;
 }
 
-impl<T: ImplicitShape> Shape for T {
+impl<T: ImplicitShape + Clone + 'static> Shape for T {
     fn collision_date(&self, ray: Ray) -> Option<f64> {
         let ray_norm_inv = 1. / ray.dir.norm();
 

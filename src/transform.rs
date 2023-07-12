@@ -1,5 +1,6 @@
 use crate::{matrix::Matrix4x4, ray::Ray, vect::Vect};
 
+#[derive(Clone, Debug)]
 pub struct Transform {
     mat: Matrix4x4,
     mat_inv: Matrix4x4,

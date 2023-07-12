@@ -2,6 +2,7 @@ use std::ops::Mul;
 
 use crate::vect::Vect;
 
+#[derive(Clone, Debug)]
 pub struct Matrix4x4 {
     /// The entries of the matrix, where m[i][j] is the entry on the i-th line
     /// and the j-th column.

@@ -1,6 +1,7 @@
 use crate::ray::Ray;
 use crate::shape::{Collision, Shape};
 
+#[derive(Clone, Debug)]
 pub struct CompoundShape {
     children: Vec<Box<dyn Shape>>,
 }

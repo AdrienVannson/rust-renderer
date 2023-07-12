@@ -2,6 +2,7 @@ use std::cmp::min;
 
 use crate::{Ray, Vect};
 
+#[derive(Clone, Debug)]
 pub struct Camera {
     // Position of the focus point
     pub pos: Vect,

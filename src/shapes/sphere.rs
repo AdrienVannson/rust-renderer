@@ -2,6 +2,7 @@ use crate::ray::Ray;
 use crate::shape::{Collision, Shape};
 use crate::vect::Vect;
 
+#[derive(Clone, Debug)]
 pub struct Sphere {
     center: Vect,
     radius: f64,

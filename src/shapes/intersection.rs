@@ -1,6 +1,7 @@
 use crate::{ray::Ray, shape::Collision, shape::Shape};
 
 /// Intersection of two shapes
+#[derive(Clone, Debug)]
 pub struct Intersection {
     shapes: [Box<dyn Shape>; 2],
 }

@@ -1,5 +1,6 @@
 use crate::{Camera, Collision, Light, Primitive, Ray};
 
+#[derive(Clone, Debug)]
 pub struct Scene {
     pub camera: Camera,
     pub lights: Vec<Light>,

@@ -1,6 +1,6 @@
 use crate::Color;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Material {
     pub color: Color,
 }

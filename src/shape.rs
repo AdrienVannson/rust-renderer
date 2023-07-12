@@ -1,13 +1,31 @@
+use std::fmt::Debug;
+
 use crate::ray::Ray;
 use crate::vect::Vect;
 
-pub trait Shape: Send + Sync {
+pub trait Shape: Send + Sync + Debug + ShapeClone {
     /// Returns the date at which a ray will collide with the object. The ray
     /// may start inside the object.
     fn collision_date(&self, ray: Ray) -> Option<f64>;
 
     // TODO no option
     fn collision(&self, ray: Ray) -> Option<Collision>;
+}
+
+pub trait ShapeClone {
+    fn clone_box(&self) -> Box<dyn Shape>;
+}
+
+impl<T: Shape + Clone + 'static> ShapeClone for T {
+    fn clone_box(&self) -> Box<dyn Shape> {
+        Box::new(self.clone())
+    }
+}
+
+impl Clone for Box<dyn Shape> {
+    fn clone(&self) -> Self {
+        self.clone_box()
+    }
 }
 
 impl dyn Shape {

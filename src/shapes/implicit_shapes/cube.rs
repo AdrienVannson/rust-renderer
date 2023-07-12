@@ -1,5 +1,6 @@
 use crate::{shapes::implicit_shape::ImplicitShape, vect::Vect};
 
+#[derive(Clone, Debug)]
 pub struct Cube {}
 
 impl ImplicitShape for Cube {

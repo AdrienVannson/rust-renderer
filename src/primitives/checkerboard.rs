@@ -7,6 +7,7 @@ use crate::vect::Vect;
 
 /// The checkboard is necessary horizontal
 /// The lines are along the x axis, and the columns along the y axis
+#[derive(Clone, Debug)]
 pub struct Checkerboard {
     origin: Vect,
     width: f64,

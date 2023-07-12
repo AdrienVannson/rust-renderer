@@ -3,6 +3,7 @@ use crate::{
 };
 
 /// Applies an affine transformation on a primitive
+#[derive(Clone, Debug)]
 pub struct TransformedPrimitive {
     primitive: Box<dyn Primitive>,
     object_to_world: Transform, // Object to world
