@@ -75,6 +75,19 @@ fn generate_samples_uniform_jitter(samples_count: u32) -> Vec<(f64, f64)> {
     samples
 }
 
+fn generate_independant_samples(samples_count: u32) -> Vec<(f64, f64)> {
+    let mut samples = Vec::new();
+
+    for _ in 0..samples_count {
+        samples.push((
+            thread_rng().gen::<f64>(),
+            thread_rng().gen::<f64>()
+        ));
+    }
+
+    samples
+}
+
 fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
     if let Some((primitive, collision)) = scene.collision(ray) {
         let material = primitive.material_at_collition(collision);
@@ -124,7 +137,7 @@ fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
             // We hit the light
             if color.red == 1. && color.blue == 1. && color.green == 0. {
                 // Use the intensity from the light
-                let intensity = 12. * next_dir * (collision.normal);
+                let intensity = 3. * next_dir * (collision.normal);
                 // TODO: pourquoi ne fonctionne pas avec (next_col.pos - collision.pos).normalized() ?
 
                 assert!(intensity >= 0.);
@@ -186,7 +199,7 @@ impl Renderer for MonteCarloRenderer {
         let mut tx_workers = Vec::new();
         let mut handles = Vec::new();
 
-        let workers_count = 4;
+        let workers_count = 32;
 
         for worker_id in 0..workers_count {
             let scene = Arc::clone(&scene);
@@ -207,14 +220,15 @@ impl Renderer for MonteCarloRenderer {
                     let color = color(
                         ray,
                         &scene,
-                        &match sampling_method {
+                        &/*match sampling_method {
                             SamplingMethod::IndependantSamples => {
                                 generate_samples_uniform_jitter(iterations_per_pixel)
                             }
                             SamplingMethod::RegularGrid => {
                                 generate_samples_regular_grid(iterations_per_pixel)
                             }
-                        },
+                        },*/
+                        generate_independant_samples(iterations_per_pixel)
                     );
 
                     tx_main
@@ -235,7 +249,7 @@ impl Renderer for MonteCarloRenderer {
         let mut image = Image::new(scene.camera.width, scene.camera.height);
 
         //for it in 0..1000 {
-        for it in 0..1 {
+        for it in 0..1000000 {
             println!("Iteration {}...", it);
 
             for x in 0..width {
