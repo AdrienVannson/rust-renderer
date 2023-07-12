@@ -79,10 +79,7 @@ fn generate_independant_samples(samples_count: u32) -> Vec<(f64, f64)> {
     let mut samples = Vec::new();
 
     for _ in 0..samples_count {
-        samples.push((
-            thread_rng().gen::<f64>(),
-            thread_rng().gen::<f64>()
-        ));
+        samples.push((thread_rng().gen::<f64>(), thread_rng().gen::<f64>()));
     }
 
     samples
@@ -228,7 +225,7 @@ impl Renderer for MonteCarloRenderer {
                                 generate_samples_regular_grid(iterations_per_pixel)
                             }
                         },*/
-                        generate_independant_samples(iterations_per_pixel)
+                        generate_independant_samples(iterations_per_pixel),
                     );
 
                     tx_main
