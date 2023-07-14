@@ -1,8 +1,5 @@
 use crate::Color;
-use std::{
-    fs::{create_dir_all, File},
-    io::Write,
-};
+use std::{fs::File, io::Write};
 
 pub struct Image {
     pixels: Vec<Vec<Color>>,
