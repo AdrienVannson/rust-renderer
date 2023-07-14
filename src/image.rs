@@ -36,9 +36,6 @@ impl Image {
 
     /// Exports the image to a given file
     pub fn export(&self, filename: &str) {
-        // Create the output directory
-        create_dir_all("output").expect("Can't create output folder");
-
         let mut output: image::RgbImage =
             image::ImageBuffer::new(self.width() as u32, self.height() as u32);
 
@@ -56,13 +53,11 @@ impl Image {
             }
         }
 
-        output
-            .save("output/".to_owned() + filename)
-            .expect("Could not save the image");
+        output.save(filename).expect("Could not save the image");
     }
 
     pub fn raw_export(&self, filename: &str) {
-        let mut file = File::create("output/".to_owned() + filename).unwrap();
+        let mut file = File::create(filename).unwrap();
 
         for x in 0..self.width() {
             for y in 0..self.height() {

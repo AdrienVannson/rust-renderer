@@ -13,8 +13,10 @@ pub enum SamplingMethod {
 }
 
 pub struct MonteCarloRenderer {
-    pub iterations_per_pixel: u32,
+    pub steps_count: u32,
+    pub iterations_per_step_count: u32,
     pub sampling_method: SamplingMethod,
+    pub output_folder: String,
 }
 
 // u1 and u2 must be random variables uniformly generated in [0, 1].
@@ -134,7 +136,8 @@ fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
             // We hit the light
             if color.red == 1. && color.blue == 1. && color.green == 0. {
                 // Use the intensity from the light
-                let intensity = 3. * next_dir * (collision.normal);
+                // Before: 3
+                let intensity = 5. * next_dir * (collision.normal);
                 // TODO: pourquoi ne fonctionne pas avec (next_col.pos - collision.pos).normalized() ?
 
                 assert!(intensity >= 0.);
@@ -174,7 +177,7 @@ impl Renderer for MonteCarloRenderer {
 
         let width = scene.camera.width;
         let height = scene.camera.height;
-        let iterations_per_pixel = self.iterations_per_pixel;
+        let iterations_per_pixel = self.iterations_per_step_count;
 
         // The type of a request is Option<Request>, None ends the thread
         struct Request {
@@ -246,8 +249,8 @@ impl Renderer for MonteCarloRenderer {
         let mut image = Image::new(scene.camera.width, scene.camera.height);
 
         //for it in 0..1000 {
-        for it in 0..1000000 {
-            println!("Iteration {}...", it);
+        for step in 0..self.steps_count {
+            println!("Iteration {}...", step * self.iterations_per_step_count);
 
             for x in 0..width {
                 for y in 0..height {
@@ -259,14 +262,14 @@ impl Renderer for MonteCarloRenderer {
 
                         let prev_color = image.pixel(x, y);
 
-                        let it = it as f64;
+                        let step = step as f64;
                         image.set_pixel(
                             x,
                             y,
                             Color::new(
-                                (it * prev_color.red + answer.color.red) / (it + 1.),
-                                (it * prev_color.green + answer.color.green) / (it + 1.),
-                                (it * prev_color.blue + answer.color.blue) / (it + 1.),
+                                (step * prev_color.red + answer.color.red) / (step + 1.),
+                                (step * prev_color.green + answer.color.green) / (step + 1.),
+                                (step * prev_color.blue + answer.color.blue) / (step + 1.),
                             ),
                         );
 
@@ -283,25 +286,27 @@ impl Renderer for MonteCarloRenderer {
 
                 let prev_color = image.pixel(x, y);
 
-                let it = it as f64;
+                let step = step as f64;
                 image.set_pixel(
                     x,
                     y,
                     Color::new(
-                        (it * prev_color.red + answer.color.red) / (it + 1.),
-                        (it * prev_color.green + answer.color.green) / (it + 1.),
-                        (it * prev_color.blue + answer.color.blue) / (it + 1.),
+                        (step * prev_color.red + answer.color.red) / (step + 1.),
+                        (step * prev_color.green + answer.color.green) / (step + 1.),
+                        (step * prev_color.blue + answer.color.blue) / (step + 1.),
                     ),
                 );
             }
 
             image.export(&format!(
-                "output-{:0>4}.png",
-                self.iterations_per_pixel * (it + 1)
+                "{}/output-{:0>5}.png",
+                self.output_folder,
+                self.iterations_per_step_count * (step + 1)
             ));
             image.raw_export(&format!(
-                "raw-output-{:0>4}",
-                self.iterations_per_pixel * (it + 1)
+                "{}/raw-output-{:0>5}",
+                self.output_folder,
+                self.iterations_per_step_count * (step + 1)
             ));
         }
 
