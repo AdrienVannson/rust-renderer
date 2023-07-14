@@ -1,4 +1,4 @@
-use crate::{ray::Ray, shape::Collision, shape::Shape};
+use crate::{BoundingBox, Collision, Ray, Shape};
 
 /// Intersection of two shapes
 #[derive(Clone, Debug)]
@@ -15,6 +15,10 @@ impl Intersection {
 }
 
 impl Shape for Intersection {
+    fn bounding_box(&self) -> BoundingBox {
+        &self.shapes[0].bounding_box() * &self.shapes[1].bounding_box()
+    }
+
     fn collision_date(&self, ray: Ray) -> Option<f64> {
         if let Some(col) = self.collision(ray) {
             Some(col.date)

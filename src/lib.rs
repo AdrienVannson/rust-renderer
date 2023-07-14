@@ -1,3 +1,4 @@
+pub mod bounding_box;
 pub mod camera;
 pub mod color;
 pub mod image;
@@ -18,6 +19,7 @@ pub mod vect;
 
 pub use crate::image::Image;
 pub use crate::renderer::Renderer;
+pub use bounding_box::BoundingBox;
 pub use camera::Camera;
 pub use color::Color;
 pub use light::Light;

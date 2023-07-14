@@ -1,6 +1,7 @@
 use crate::ray::Ray;
 use crate::shape::{Collision, Shape};
 use crate::vect::Vect;
+use crate::BoundingBox;
 
 #[derive(Clone, Debug)]
 pub struct Triangle {
@@ -16,6 +17,16 @@ impl Triangle {
 }
 
 impl Shape for Triangle {
+    fn bounding_box(&self) -> BoundingBox {
+        let mut bounding_box = BoundingBox::new();
+
+        bounding_box.add_point(self.a);
+        bounding_box.add_point(self.b);
+        bounding_box.add_point(self.c);
+
+        bounding_box
+    }
+
     fn collision_date(&self, ray: Ray) -> Option<f64> {
         let n = (self.b - self.a) ^ (self.c - self.a);
 

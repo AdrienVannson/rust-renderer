@@ -1,9 +1,8 @@
 use std::fmt::Debug;
 
 use crate::{
-    ray::Ray,
     shape::{Collision, Shape},
-    vect::Vect,
+    BoundingBox, Ray, Vect,
 };
 
 pub trait ImplicitShape: Send + Sync + Debug {
@@ -17,6 +16,11 @@ pub trait ImplicitShape: Send + Sync + Debug {
 }
 
 impl<T: ImplicitShape + Clone + 'static> Shape for T {
+    fn bounding_box(&self) -> BoundingBox {
+        // TODO use a smaaller box
+        BoundingBox::new_full()
+    }
+
     fn collision_date(&self, ray: Ray) -> Option<f64> {
         let ray_norm_inv = 1. / ray.dir.norm();
 

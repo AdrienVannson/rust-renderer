@@ -23,6 +23,16 @@ impl Vect {
         Self { x, y, z }
     }
 
+    /// Returns the value of the n-th component of the vector
+    pub fn component(&self, n: u32) -> f64 {
+        match n {
+            0 => self.x,
+            1 => self.y,
+            2 => self.z,
+            _ => unreachable!(),
+        }
+    }
+
     /// Returns the norm of the vector
     pub fn norm(&self) -> f64 {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()

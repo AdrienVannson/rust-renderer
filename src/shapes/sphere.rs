@@ -1,6 +1,5 @@
-use crate::ray::Ray;
 use crate::shape::{Collision, Shape};
-use crate::vect::Vect;
+use crate::{BoundingBox, Ray, Vect};
 
 #[derive(Clone, Debug)]
 pub struct Sphere {
@@ -15,6 +14,11 @@ impl Sphere {
 }
 
 impl Shape for Sphere {
+    fn bounding_box(&self) -> BoundingBox {
+        let v = Vect::new(self.radius, self.radius, self.radius);
+        BoundingBox::new_from_extremities(self.center - v, self.center + v)
+    }
+
     fn collision_date(&self, ray: Ray) -> Option<f64> {
         let u = self.center - ray.pos();
         let v = ray.dir();

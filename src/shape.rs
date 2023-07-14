@@ -1,9 +1,11 @@
 use std::fmt::Debug;
 
-use crate::ray::Ray;
-use crate::vect::Vect;
+use crate::{BoundingBox, Ray, Vect};
 
 pub trait Shape: Send + Sync + Debug + ShapeClone {
+    /// Returns a bounding box (idealy the smallest) containing the object
+    fn bounding_box(&self) -> BoundingBox;
+
     /// Returns the date at which a ray will collide with the object. The ray
     /// may start inside the object.
     fn collision_date(&self, ray: Ray) -> Option<f64>;
