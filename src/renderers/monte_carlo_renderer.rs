@@ -19,24 +19,6 @@ pub struct MonteCarloRenderer {
     pub output_folder: String,
 }
 
-// u1 and u2 must be random variables uniformly generated in [0, 1].
-fn random_vector_in_half_space(dir: Vect, u1: f64, u2: f64) -> Vect {
-    let theta = 2.0 * PI * u1;
-    let phi = (2.0 * u2 - 1.0).acos();
-
-    let x = phi.sin() * theta.cos();
-    let y = phi.sin() * theta.sin();
-    let z = phi.cos();
-
-    let vect = Vect::new(x, y, z);
-
-    if vect * dir < 0. {
-        -vect
-    } else {
-        vect
-    }
-}
-
 fn generate_samples_regular_grid(samples_count: u32) -> Vec<(f64, f64)> {
     let root = (samples_count as f64).sqrt() as u32;
     assert_eq!(root * root, samples_count);
@@ -124,6 +106,7 @@ fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
         }*/
 
         let next_dir = random_vector_in_half_space(collision.normal, sample.0, sample.1);
+        let next_dir = to_co
         let mut next_ray = Ray {
             pos: collision.pos,
             dir: next_dir,

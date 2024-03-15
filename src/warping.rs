@@ -37,6 +37,13 @@ pub fn to_cosine_hemisphere(sample: [f64; 2]) -> Vect {
     Vect::new(on_disk.x, on_disk.y, (1. - on_disk.squared_norm()).sqrt())
 }
 
+pub fn to_cosine_directed_hemisphere(v: Vect, sample: [f64; 2]) -> Vect {
+    let basis = complete_basis_from_1(v);
+    let transform = Transform::new_local_to_world(Vect::zero(), basis[1], basis[2], basis[0]);
+
+    transform.apply_vector(to_cosine_hemisphere(sample))
+}
+
 #[cfg(test)]
 mod tests {
     use rand::Rng;
