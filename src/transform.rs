@@ -205,8 +205,8 @@ pub fn merge(t1: &Transform, t2: &Transform) -> Transform {
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::PI;
     use super::*;
+    use std::f64::consts::PI;
 
     #[test]
     fn test_transforms_from_basis() {

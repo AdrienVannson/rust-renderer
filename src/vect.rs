@@ -140,6 +140,23 @@ impl BitXor for Vect {
     }
 }
 
+/// Generate a basis from a vector of length 1
+pub fn complete_basis_from_1(i: Vect) -> [Vect; 3] {
+    let j = if i.x.abs() <= 0.5 {
+        Vect::new(0., -i.z, i.y)
+    } else {
+        Vect::new(-i.y, i.x, 0.)
+    }.normalized();
+    let k = i ^ j;
+    [i, j, k]
+}
+
+/// Generate a basis from two orthonormal vectors
+pub fn complete_basis_from_2(i: Vect, j: Vect) -> [Vect; 3] {
+    let k = i ^ j;
+    [i, j, k]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -153,5 +170,28 @@ mod tests {
 
         v.normalize();
         assert!(0.99 <= v.norm() && v.norm() <= 1.01);
+    }
+
+    #[test]
+    fn test_basis_completion() {
+        let i = Vect::new(1., 2., -3.).normalized();
+        let [i, j, k] = complete_basis_from_1(i);
+        println!("{} {} {}", (i-j).norm(), (j - k).norm(), (k-i).norm());
+        assert!((i * j).abs() <= 1e-4 && (j * k).abs() <= 1e-4 && (k * i).abs() <= 1e-4);
+        assert!(
+            (i.norm() - 1.).abs() <= 1e-4
+                && (j.norm() - 1.).abs() <= 1e-4
+                && (k.norm() - 1.).abs() <= 1e-4
+        );
+
+        let i = Vect::new(3., -2., 1.).normalized();
+        let [i, j, k] = complete_basis_from_1(i);
+        println!("{} {} {}", (i-j).norm(), (j - k).norm(), (k-i).norm());
+        assert!((i * j).abs() <= 1e-4 && (j * k).abs() <= 1e-4 && (k * i).abs() <= 1e-4);
+        assert!(
+            (i.norm() - 1.).abs() <= 1e-4
+                && (j.norm() - 1.).abs() <= 1e-4
+                && (k.norm() - 1.).abs() <= 1e-4
+        );
     }
 }
