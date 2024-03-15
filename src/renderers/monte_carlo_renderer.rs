@@ -1,7 +1,7 @@
-use crate::{Color, Image, Ray, Renderer, Scene, Vect};
+use crate::warping::to_cosine_directed_hemisphere;
+use crate::{Color, Image, Ray, Renderer, Scene};
 use rand::{thread_rng, Rng};
 use std::{
-    f64::consts::PI,
     sync::{mpsc, Arc},
     thread,
 };
@@ -59,17 +59,17 @@ fn generate_samples_uniform_jitter(samples_count: u32) -> Vec<(f64, f64)> {
     samples
 }
 
-fn generate_independant_samples(samples_count: u32) -> Vec<(f64, f64)> {
+fn generate_independant_samples(samples_count: u32) -> Vec<[f64; 2]> {
     let mut samples = Vec::new();
 
     for _ in 0..samples_count {
-        samples.push((thread_rng().gen::<f64>(), thread_rng().gen::<f64>()));
+        samples.push([thread_rng().gen::<f64>(), thread_rng().gen::<f64>()]);
     }
 
     samples
 }
 
-fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
+fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2]) -> Color {
     if let Some((primitive, collision)) = scene.collision(ray) {
         let material = primitive.material_at_collition(collision);
 
@@ -105,8 +105,8 @@ fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
             blue: intensity * material.color.blue,
         }*/
 
-        let next_dir = random_vector_in_half_space(collision.normal, sample.0, sample.1);
-        let next_dir = to_co
+        // Importance sampling
+        let next_dir = to_cosine_directed_hemisphere(collision.normal, sample);
         let mut next_ray = Ray {
             pos: collision.pos,
             dir: next_dir,
@@ -120,7 +120,8 @@ fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
             if color.red == 1. && color.blue == 1. && color.green == 0. {
                 // Use the intensity from the light
                 // Before: 3
-                let intensity = 5. * next_dir * (collision.normal);
+                // No need to add a cosine factor due to importance sampling
+                let intensity = 5.;
                 // TODO: pourquoi ne fonctionne pas avec (next_col.pos - collision.pos).normalized() ?
 
                 assert!(intensity >= 0.);
@@ -139,7 +140,7 @@ fn one_color(ray: Ray, scene: &Scene, sample: (f64, f64)) -> Color {
     }
 }
 
-fn color(ray: Ray, scene: &Scene, samples: &Vec<(f64, f64)>) -> Color {
+fn color(ray: Ray, scene: &Scene, samples: &Vec<[f64; 2]>) -> Color {
     let mut sum = (0., 0., 0.);
 
     for sample in samples {
