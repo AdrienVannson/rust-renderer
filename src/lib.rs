@@ -16,6 +16,7 @@ pub mod shape;
 pub mod shapes;
 pub mod transform;
 pub mod vect;
+pub mod warping;
 
 pub use crate::image::Image;
 pub use crate::renderer::Renderer;
