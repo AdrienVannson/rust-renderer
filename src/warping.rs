@@ -1,5 +1,6 @@
-use crate::Vect;
+use crate::{Transform, Vect};
 use std::f64::consts::PI;
+use crate::vect::complete_basis_from_1;
 
 pub fn to_uniform_disk(sample: [f64; 2]) -> Vect {
     let r = sample[0].sqrt();
@@ -24,7 +25,43 @@ pub fn to_uniform_hemisphere(sample: [f64; 2]) -> Vect {
     Vect::new(r * phi.cos(), r * phi.sin(), z)
 }
 
+pub fn to_uniform_directed_hemisphere(v: Vect, sample: [f64; 2]) -> Vect {
+    let basis = complete_basis_from_1(v);
+    let transform = Transform::new_local_to_world(Vect::zero(), basis[1], basis[2], basis[0]);
+
+    transform.apply_vector(to_uniform_hemisphere(sample))
+}
+
 pub fn to_cosine_hemisphere(sample: [f64; 2]) -> Vect {
     let on_disk = to_uniform_disk(sample);
     Vect::new(on_disk.x, on_disk.y, (1. - on_disk.squared_norm()).sqrt())
+}
+
+#[cfg(test)]
+mod tests {
+    use rand::Rng;
+    use super::*;
+
+    use rand::{SeedableRng, rngs::StdRng};
+
+    #[test]
+    fn test_uniform_directed_hemisphere() {
+        let mut rng = StdRng::from_seed([42; 32]);
+
+        for _ in 0..100 {
+            let sample: [f64; 2] = [rng.gen(), rng.gen()];
+
+            let v = Vect::new(rng.gen::<f64>() - 0.5, rng.gen::<f64>() - 0.5, rng.gen::<f64>() - 0.5).normalized();
+            let u = to_uniform_directed_hemisphere(v, sample);
+
+            assert!(u * v >= 0.);
+        }
+        let mut v = Vect::new(1., -1., 0.);
+        let norm = v.norm();
+
+        assert!(1.4142 <= norm && norm <= 1.4143);
+
+        v.normalize();
+        assert!(0.99 <= v.norm() && v.norm() <= 1.01);
+    }
 }
