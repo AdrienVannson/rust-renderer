@@ -92,12 +92,41 @@ impl Transform {
         Self { mat, mat_inv }
     }
 
+    /// Returns a transformation that converts vectors in a given basis to world coordinate
+    pub fn new_local_to_world(o: Vect, i: Vect, j: Vect, k: Vect) -> Self {
+        Self {
+            mat: Matrix4x4::new([
+                [i.x, j.x, k.x, o.x],
+                [i.y, j.y, k.y, o.y],
+                [i.z, j.z, k.z, o.z],
+            ]),
+            mat_inv: Matrix4x4::new([
+                [i.x, i.y, i.z, -o * i],
+                [j.x, j.y, j.z, -o * j],
+                [k.x, k.y, k.z, -o * k],
+            ]),
+        }
+    }
+
+    /// Returns a transformation that converts vectors in world coordinate to a given basis
+    pub fn new_world_to_local(o: Vect, i: Vect, j: Vect, k: Vect) -> Self {
+        Self::new_local_to_world(o, i, j, k).inverse()
+    }
+
     /// Returns the transformation obtained when applying other after the
-    /// current tranformation
+    /// current transformation
     pub fn add(&self, other: &Transform) -> Self {
         Self {
             mat: &other.mat * &self.mat,
             mat_inv: &self.mat_inv * &other.mat_inv,
+        }
+    }
+
+    /// Return the inverse of the current transformation
+    pub fn inverse(&self) -> Self {
+        Self {
+            mat: self.mat_inv.clone(),
+            mat_inv: self.mat.clone(),
         }
     }
 
@@ -171,5 +200,30 @@ pub fn merge(t1: &Transform, t2: &Transform) -> Transform {
     Transform {
         mat: &t2.mat * &t1.mat,
         mat_inv: &t1.mat_inv * &t2.mat_inv,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::f64::consts::PI;
+    use super::*;
+
+    #[test]
+    fn test_transforms_from_basis() {
+        let o = Vect::new(1., 2., 3.);
+        let i = Vect::new(1., 1., 0.).normalized();
+        let j = Vect::new(-1., 1., 0.).normalized();
+        let k = Vect::new(0., 0., -1.);
+
+        let v = Vect::new(-1., 2., 4.);
+
+        let transform = Transform::new_world_to_local(o, i, j, k);
+
+        let u = Vect::new(-2.0_f64.sqrt(), 2.0_f64.sqrt(), -1.);
+        println!("{:?}", transform);
+        println!("{:?}", transform.apply_point(v));
+
+        assert!((transform.apply_point(v) - u).norm() <= 1e-4);
+        assert!((v - transform.apply_point(transform.inverse().apply_point(v))).norm() <= 1e-4);
     }
 }
