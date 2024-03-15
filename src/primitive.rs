@@ -4,12 +4,12 @@ use crate::material::Material;
 use crate::ray::Ray;
 use crate::shape::Collision;
 
-/// A primitive is something that can be renderered.
+/// A primitive is something that can be rendered.
 pub trait Primitive: Send + Sync + PrimitiveClone + Debug {
     fn collision_date(&self, ray: Ray) -> Option<f64>;
     fn collision(&self, ray: Ray) -> Option<Collision>;
 
-    fn material_at_collition(&self, collision: Collision) -> Material;
+    fn material_at_collision(&self, collision: Collision) -> Material;
 }
 
 pub trait PrimitiveClone {

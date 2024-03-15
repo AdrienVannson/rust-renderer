@@ -73,7 +73,7 @@ impl Primitive for Checkerboard {
         }
     }
 
-    fn material_at_collition(&self, collision: Collision) -> Material {
+    fn material_at_collision(&self, collision: Collision) -> Material {
         let index_x =
             ((collision.pos.x - self.origin.x) / self.width * self.columns_count as f64) as usize;
         let index_y =

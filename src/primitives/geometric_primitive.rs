@@ -21,7 +21,7 @@ impl Primitive for GeometricPrimitive {
         self.shape.collision(ray)
     }
 
-    fn material_at_collition(&self, _collision: Collision) -> Material {
+    fn material_at_collision(&self, _collision: Collision) -> Material {
         self.material
     }
 }

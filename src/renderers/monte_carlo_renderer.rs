@@ -71,9 +71,9 @@ fn generate_independant_samples(samples_count: u32) -> Vec<[f64; 2]> {
 
 fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2]) -> Color {
     if let Some((primitive, collision)) = scene.collision(ray) {
-        let material = primitive.material_at_collition(collision);
+        let material = primitive.material_at_collision(collision);
 
-        let color = primitive.material_at_collition(collision).color;
+        let color = primitive.material_at_collision(collision).color;
 
         // We hit the light
         if color.red == 1. && color.blue == 1. && color.green == 0. {
@@ -114,7 +114,7 @@ fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2]) -> Color {
         next_ray.move_by(1e-3);
 
         if let Some((next_primitive, next_col)) = scene.collision(next_ray) {
-            let color = next_primitive.material_at_collition(next_col).color;
+            let color = next_primitive.material_at_collision(next_col).color;
 
             // We hit the light
             if color.red == 1. && color.blue == 1. && color.green == 0. {

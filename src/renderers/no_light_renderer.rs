@@ -10,7 +10,7 @@ pub struct NoLightRenderer {}
 impl NoLightRenderer {
     fn color(&self, ray: Ray, scene: &Scene) -> Color {
         if let Some((primitive, collision)) = scene.collision(ray) {
-            let material = primitive.material_at_collition(collision);
+            let material = primitive.material_at_collision(collision);
             material.color
         } else {
             Color::black()

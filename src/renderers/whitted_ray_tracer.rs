@@ -10,7 +10,7 @@ pub struct WhittedRayTracer {}
 
 fn color(ray: Ray, scene: &Arc<Scene>) -> Color {
     if let Some((primitive, collision)) = scene.collision(ray) {
-        let material = primitive.material_at_collition(collision);
+        let material = primitive.material_at_collision(collision);
 
         // Compute the intensity
         let mut intensity = 0.;

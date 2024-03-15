@@ -38,7 +38,7 @@ impl Primitive for TransformedPrimitive {
         }
     }
 
-    fn material_at_collition(&self, collision: Collision) -> Material {
-        self.primitive.material_at_collition(collision)
+    fn material_at_collision(&self, collision: Collision) -> Material {
+        self.primitive.material_at_collision(collision)
     }
 }
