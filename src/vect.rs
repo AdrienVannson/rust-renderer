@@ -146,7 +146,8 @@ pub fn complete_basis_from_1(i: Vect) -> [Vect; 3] {
         Vect::new(0., -i.z, i.y)
     } else {
         Vect::new(-i.y, i.x, 0.)
-    }.normalized();
+    }
+    .normalized();
     let k = i ^ j;
     [i, j, k]
 }
@@ -176,7 +177,6 @@ mod tests {
     fn test_basis_completion() {
         let i = Vect::new(1., 2., -3.).normalized();
         let [i, j, k] = complete_basis_from_1(i);
-        println!("{} {} {}", (i-j).norm(), (j - k).norm(), (k-i).norm());
         assert!((i * j).abs() <= 1e-4 && (j * k).abs() <= 1e-4 && (k * i).abs() <= 1e-4);
         assert!(
             (i.norm() - 1.).abs() <= 1e-4
@@ -186,7 +186,6 @@ mod tests {
 
         let i = Vect::new(3., -2., 1.).normalized();
         let [i, j, k] = complete_basis_from_1(i);
-        println!("{} {} {}", (i-j).norm(), (j - k).norm(), (k-i).norm());
         assert!((i * j).abs() <= 1e-4 && (j * k).abs() <= 1e-4 && (k * i).abs() <= 1e-4);
         assert!(
             (i.norm() - 1.).abs() <= 1e-4
