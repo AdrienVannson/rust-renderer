@@ -1,6 +1,7 @@
 use crate::warping::to_cosine_directed_hemisphere;
 use crate::{Color, Image, Ray, Renderer, Scene};
 use rand::{thread_rng, Rng};
+use std::f64::consts::PI;
 use std::{
     sync::{mpsc, Arc},
     thread,
@@ -121,8 +122,7 @@ fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2]) -> Color {
                 // Use the intensity from the light
                 // Before: 3
                 // No need to add a cosine factor due to importance sampling
-                let intensity = 5.;
-                // TODO: pourquoi ne fonctionne pas avec (next_col.pos - collision.pos).normalized() ?
+                let intensity = 50. / PI;
 
                 assert!(intensity >= 0.);
 
