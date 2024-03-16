@@ -18,6 +18,7 @@ pub struct MonteCarloRenderer {
     pub iterations_per_step_count: u32,
     pub sampling_method: SamplingMethod,
     pub output_folder: String,
+    pub ambient_occlusion: Color,
 }
 
 fn generate_samples_regular_grid(samples_count: u32) -> Vec<(f64, f64)> {
@@ -70,7 +71,7 @@ fn generate_independant_samples(samples_count: u32) -> Vec<[f64; 2]> {
     samples
 }
 
-fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2]) -> Color {
+fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2], ambient_occlusion: Color) -> Color {
     if let Some((primitive, collision)) = scene.collision(ray) {
         let material = primitive.material_at_collision(collision);
 
@@ -125,25 +126,27 @@ fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2]) -> Color {
 
                 assert!(intensity >= 0.);
 
-                return Color {
+                Color {
                     red: intensity * material.color.red,
                     green: intensity * material.color.green,
                     blue: intensity * material.color.blue,
-                };
+                }
+            } else {
+                Color::black()
             }
+        } else {
+            ambient_occlusion
         }
-
-        Color::black()
     } else {
         Color::black()
     }
 }
 
-fn color(ray: Ray, scene: &Scene, samples: &Vec<[f64; 2]>) -> Color {
+fn color(ray: Ray, scene: &Scene, samples: &Vec<[f64; 2]>, ambient_occlusion: Color) -> Color {
     let mut sum = (0., 0., 0.);
 
     for sample in samples {
-        let color = one_color(ray, scene, *sample);
+        let color = one_color(ray, scene, *sample, ambient_occlusion);
 
         sum.0 += color.red;
         sum.1 += color.green;
@@ -191,6 +194,7 @@ impl Renderer for MonteCarloRenderer {
             let tx_main = tx_main.clone();
 
             let sampling_method = self.sampling_method;
+            let ambient_occlusion = self.ambient_occlusion;
 
             handles.push(thread::spawn(move || {
                 while let Some(request) = rx_worker.recv().unwrap() {
@@ -212,6 +216,7 @@ impl Renderer for MonteCarloRenderer {
                             }
                         },*/
                         generate_independant_samples(iterations_per_pixel),
+                        ambient_occlusion,
                     );
 
                     tx_main
