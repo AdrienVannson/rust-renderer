@@ -119,8 +119,7 @@ fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2]) -> Color {
 
             // We hit the light
             if color.red == 1. && color.blue == 1. && color.green == 0. {
-                // Use the intensity from the light
-                // Before: 3
+                // TODO Use the intensity from the light
                 // No need to add a cosine factor due to importance sampling
                 let intensity = 50. / PI;
 
