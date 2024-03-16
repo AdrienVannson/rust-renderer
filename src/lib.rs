@@ -11,6 +11,8 @@ pub mod primitives;
 pub mod ray;
 pub mod renderer;
 pub mod renderers;
+pub mod sampler;
+pub mod samplers;
 pub mod scene;
 pub mod shape;
 pub mod shapes;
