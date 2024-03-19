@@ -207,14 +207,6 @@ impl<S: Sampler + 'static> Renderer for MonteCarloRenderer<S> {
                     let color = color(
                         ray,
                         &scene,
-                        /*match sampling_method {
-                            SamplingMethod::IndependantSamples => {
-                                generate_samples_uniform_jitter(iterations_per_pixel)
-                            }
-                            SamplingMethod::RegularGrid => {
-                                generate_samples_regular_grid(iterations_per_pixel)
-                            }
-                        },*/
                         iterations_per_pixel as usize,
                         &mut sampler,
                         ambient_occlusion,
