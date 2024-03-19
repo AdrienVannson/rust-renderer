@@ -12,7 +12,7 @@ pub struct StratifiedSampler {
 impl StratifiedSampler {
     pub fn new(seed: u64) -> Self {
         StratifiedSampler {
-            rng: fastrand::Rng::with_seed(seed),
+            rng: Rng::with_seed(seed),
             with_jittering: true,
             samples_2d: Vec::new(),
             current_sample: 0,

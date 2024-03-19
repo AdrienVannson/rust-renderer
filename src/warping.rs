@@ -47,23 +47,16 @@ pub fn to_cosine_directed_hemisphere(v: Vect, sample: [f64; 2]) -> Vect {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rand::Rng;
-
-    use rand::{rngs::StdRng, SeedableRng};
+    use fastrand::Rng;
 
     #[test]
     fn test_uniform_directed_hemisphere() {
-        let mut rng = StdRng::from_seed([42; 32]);
+        let mut rng = Rng::with_seed(42);
 
         for _ in 0..100 {
-            let sample: [f64; 2] = [rng.gen(), rng.gen()];
+            let sample: [f64; 2] = [rng.f64(), rng.f64()];
 
-            let v = Vect::new(
-                rng.gen::<f64>() - 0.5,
-                rng.gen::<f64>() - 0.5,
-                rng.gen::<f64>() - 0.5,
-            )
-            .normalized();
+            let v = Vect::new(rng.f64() - 0.5, rng.f64() - 0.5, rng.f64() - 0.5).normalized();
             let u = to_uniform_directed_hemisphere(v, sample);
 
             assert!(u * v >= 0.);
