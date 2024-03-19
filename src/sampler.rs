@@ -1,4 +1,4 @@
-pub trait Sampler {
+pub trait Sampler: Send {
     /// Create a new instance of the sampler.
     fn new(seed: u64) -> Self;
 

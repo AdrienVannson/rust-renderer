@@ -1,5 +1,7 @@
+use crate::sampler::Sampler;
 use crate::warping::to_cosine_directed_hemisphere;
 use crate::{Color, Image, Ray, Renderer, Scene};
+use derive_builder::Builder;
 use rand::{thread_rng, Rng};
 use std::f64::consts::PI;
 use std::{
@@ -7,18 +9,18 @@ use std::{
     thread,
 };
 
-#[derive(Copy, Clone, Debug)]
-pub enum SamplingMethod {
-    IndependantSamples,
-    RegularGrid,
-}
+#[derive(Builder)]
+#[builder(pattern = "owned")]
+pub struct MonteCarloRenderer<S: Sampler> {
+    steps_count: u32,
+    iterations_per_step_count: u32,
+    output_folder: String,
 
-pub struct MonteCarloRenderer {
-    pub steps_count: u32,
-    pub iterations_per_step_count: u32,
-    pub sampling_method: SamplingMethod,
-    pub output_folder: String,
-    pub ambient_occlusion: Color,
+    #[builder(default = "Color::black()")]
+    ambient_occlusion: Color,
+
+    // Given a unique ID representing the thread, returns a new sampler
+    sampler_factory: fn(usize) -> S,
 }
 
 fn generate_samples_regular_grid(samples_count: u32) -> Vec<(f64, f64)> {
@@ -56,16 +58,6 @@ fn generate_samples_uniform_jitter(samples_count: u32) -> Vec<(f64, f64)> {
                 (j as f64 + 0.5 + jitter_y) / root as f64,
             ));
         }
-    }
-
-    samples
-}
-
-fn generate_independant_samples(samples_count: u32) -> Vec<[f64; 2]> {
-    let mut samples = Vec::new();
-
-    for _ in 0..samples_count {
-        samples.push([thread_rng().gen::<f64>(), thread_rng().gen::<f64>()]);
     }
 
     samples
@@ -142,22 +134,28 @@ fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2], ambient_occlusion: Color
     }
 }
 
-fn color(ray: Ray, scene: &Scene, samples: &Vec<[f64; 2]>, ambient_occlusion: Color) -> Color {
+fn color<S: Sampler>(
+    ray: Ray,
+    scene: &Scene,
+    nb_samples: usize,
+    sampler: &mut S,
+    ambient_occlusion: Color,
+) -> Color {
     let mut sum = (0., 0., 0.);
 
-    for sample in samples {
-        let color = one_color(ray, scene, *sample, ambient_occlusion);
+    for _ in 0..nb_samples {
+        let color = one_color(ray, scene, sampler.next2d(), ambient_occlusion);
 
         sum.0 += color.red;
         sum.1 += color.green;
         sum.2 += color.blue;
     }
 
-    let f = 1. / samples.len() as f64;
+    let f = 1. / nb_samples as f64;
     Color::new(f * sum.0, f * sum.1, f * sum.2)
 }
 
-impl Renderer for MonteCarloRenderer {
+impl<S: Sampler + 'static> Renderer for MonteCarloRenderer<S> {
     fn render(&self, scene: Scene) {
         let scene = Arc::new(scene);
 
@@ -193,11 +191,13 @@ impl Renderer for MonteCarloRenderer {
             tx_workers.push(tx_worker);
             let tx_main = tx_main.clone();
 
-            let sampling_method = self.sampling_method;
             let ambient_occlusion = self.ambient_occlusion;
+            let mut sampler = (self.sampler_factory)(worker_id);
 
             handles.push(thread::spawn(move || {
                 while let Some(request) = rx_worker.recv().unwrap() {
+                    sampler.prepare(1, 1, iterations_per_pixel as usize);
+
                     let (x, y) = (request.x, request.y);
 
                     // Compute the ray
@@ -207,7 +207,7 @@ impl Renderer for MonteCarloRenderer {
                     let color = color(
                         ray,
                         &scene,
-                        &/*match sampling_method {
+                        /*match sampling_method {
                             SamplingMethod::IndependantSamples => {
                                 generate_samples_uniform_jitter(iterations_per_pixel)
                             }
@@ -215,7 +215,8 @@ impl Renderer for MonteCarloRenderer {
                                 generate_samples_regular_grid(iterations_per_pixel)
                             }
                         },*/
-                        generate_independant_samples(iterations_per_pixel),
+                        iterations_per_pixel as usize,
+                        &mut sampler,
                         ambient_occlusion,
                     );
 
