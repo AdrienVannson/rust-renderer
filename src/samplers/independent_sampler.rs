@@ -5,13 +5,15 @@ pub struct IndependentSampler {
     rng: Rng,
 }
 
-impl Sampler for IndependentSampler {
+impl IndependentSampler {
     fn new(seed: u64) -> Self {
         IndependentSampler {
             rng: fastrand::Rng::with_seed(seed),
         }
     }
+}
 
+impl Sampler for IndependentSampler {
     fn prepare(&mut self, nb_1d: usize, nb_2d: usize, nb_samples: usize) {}
 
     fn new_sample(&mut self) {}

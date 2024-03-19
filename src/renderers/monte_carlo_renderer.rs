@@ -144,6 +144,7 @@ fn color<S: Sampler>(
     let mut sum = (0., 0., 0.);
 
     for _ in 0..nb_samples {
+        sampler.new_sample();
         let color = one_color(ray, scene, sampler.next2d(), ambient_occlusion);
 
         sum.0 += color.red;
@@ -183,7 +184,7 @@ impl<S: Sampler + 'static> Renderer for MonteCarloRenderer<S> {
         let mut tx_workers = Vec::new();
         let mut handles = Vec::new();
 
-        let workers_count = 32;
+        let workers_count = 4; // TODO choose wisely
 
         for worker_id in 0..workers_count {
             let scene = Arc::clone(&scene);
@@ -196,7 +197,7 @@ impl<S: Sampler + 'static> Renderer for MonteCarloRenderer<S> {
 
             handles.push(thread::spawn(move || {
                 while let Some(request) = rx_worker.recv().unwrap() {
-                    sampler.prepare(1, 1, iterations_per_pixel as usize);
+                    sampler.prepare(0, 1, iterations_per_pixel as usize);
 
                     let (x, y) = (request.x, request.y);
 

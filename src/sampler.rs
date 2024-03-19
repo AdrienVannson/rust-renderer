@@ -1,7 +1,4 @@
 pub trait Sampler: Send {
-    /// Create a new instance of the sampler.
-    fn new(seed: u64) -> Self;
-
     /// Initializes the sampler. It will need to generate a fixed number of samples.
     /// Each sample will be composed of at most a fixed number of unique random values and a fixed
     /// number of couples of random values.
