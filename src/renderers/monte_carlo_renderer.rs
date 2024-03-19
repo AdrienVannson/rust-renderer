@@ -2,9 +2,8 @@ use crate::sampler::Sampler;
 use crate::warping::to_cosine_directed_hemisphere;
 use crate::{Color, Image, Ray, Renderer, Scene};
 use derive_builder::Builder;
-use rand::{thread_rng, Rng};
-use std::f64::consts::PI;
 use std::{
+    f64::consts::PI,
     sync::{mpsc, Arc},
     thread,
 };
@@ -21,46 +20,6 @@ pub struct MonteCarloRenderer<S: Sampler> {
 
     // Given a unique ID representing the thread, returns a new sampler
     sampler_factory: fn(usize) -> S,
-}
-
-fn generate_samples_regular_grid(samples_count: u32) -> Vec<(f64, f64)> {
-    let root = (samples_count as f64).sqrt() as u32;
-    assert_eq!(root * root, samples_count);
-
-    let mut samples = Vec::new();
-
-    for i in 0..root {
-        for j in 0..root {
-            samples.push((
-                // Not 0.5 to prevent rays from being parallel to the walls
-                (i as f64 + 0.505) / root as f64,
-                ((j as f64 + 0.505) / root as f64),
-            ));
-        }
-    }
-
-    samples
-}
-
-fn generate_samples_uniform_jitter(samples_count: u32) -> Vec<(f64, f64)> {
-    let root = (samples_count as f64).sqrt() as u32;
-    assert_eq!(root * root, samples_count);
-
-    let mut samples = Vec::new();
-
-    let jitter_x = thread_rng().gen::<f64>() - 0.5;
-    let jitter_y = thread_rng().gen::<f64>() - 0.5;
-
-    for i in 0..root {
-        for j in 0..root {
-            samples.push((
-                (i as f64 + 0.5 + jitter_x) / root as f64,
-                (j as f64 + 0.5 + jitter_y) / root as f64,
-            ));
-        }
-    }
-
-    samples
 }
 
 fn one_color(ray: Ray, scene: &Scene, sample: [f64; 2], ambient_occlusion: Color) -> Color {

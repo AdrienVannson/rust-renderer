@@ -10,7 +10,7 @@ pub struct StratifiedSampler {
 }
 
 impl StratifiedSampler {
-    fn new(seed: u64) -> Self {
+    pub fn new(seed: u64) -> Self {
         StratifiedSampler {
             rng: fastrand::Rng::with_seed(seed),
             with_jittering: true,
@@ -20,7 +20,7 @@ impl StratifiedSampler {
         }
     }
 
-    fn new_without_jittering(seed: u64) -> Self {
+    pub fn new_without_jittering(seed: u64) -> Self {
         StratifiedSampler {
             rng: fastrand::Rng::with_seed(seed),
             with_jittering: false,

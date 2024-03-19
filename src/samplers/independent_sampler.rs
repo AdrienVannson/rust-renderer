@@ -6,7 +6,7 @@ pub struct IndependentSampler {
 }
 
 impl IndependentSampler {
-    fn new(seed: u64) -> Self {
+    pub fn new(seed: u64) -> Self {
         IndependentSampler {
             rng: fastrand::Rng::with_seed(seed),
         }
