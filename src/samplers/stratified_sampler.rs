@@ -35,6 +35,7 @@ impl Sampler for StratifiedSampler {
     fn prepare(&mut self, nb_1d: usize, nb_2d: usize, nb_samples: usize) {
         // TODO 1D
         // TODO several 2d dimensions
+        // TODO shuffle between dimensions
         assert_eq!(nb_2d, 1);
 
         let root = (nb_samples as f64).sqrt() as usize;
