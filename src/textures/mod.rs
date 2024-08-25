@@ -1,3 +1,3 @@
 pub mod uniform;
 
-pub use Uniform;
+pub use uniform::Uniform;

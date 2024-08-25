@@ -1,7 +1,7 @@
 use crate::Texture;
 
 /// A uniform texture has the same value everywhere
-struct Uniform<T: Clone> {
+pub struct Uniform<T: Clone> {
     val: T,
 }
 
