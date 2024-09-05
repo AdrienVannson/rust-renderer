@@ -18,7 +18,7 @@ fn color(ray: Ray, scene: &Arc<Scene>) -> Color {
         for light in scene.lights.iter() {
             let to_light = light.pos - collision.pos;
 
-            // Check if an ogject hides the light
+            // Check if an object hides the light
             let mut ray_to_light = Ray::new(collision.pos, to_light);
             ray_to_light.move_by(1e-3); // TODO make this value depend on the scene
 
